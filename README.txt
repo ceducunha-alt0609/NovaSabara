@@ -1,63 +1,30 @@
-NOVA SABARÁ MENSALIDADES — PACOTE FINAL PWA
+NOVA SABARÁ MENSALIDADES — PWA FINAL
 
-Este pacote está pronto para subir no GitHub Pages e instalar como app no PC e no celular.
-
-ARQUIVOS DO PACOTE
+Arquivos principais:
 - index.html
 - manifest.json
+- sw.js
 - service-worker.js
 - icon-192.png
 - icon-512.png
 - apple-touch-icon.png
 - favicon.png
-- README.txt
 
-NOME DO APP
-Nova Sabará Mensalidades
+IMPORTANTE PARA INSTALAÇÃO
+1. Suba todos os arquivos para a raiz do repositório.
+2. Ative GitHub Pages.
+3. Abra a URL publicada em HTTPS.
+4. O app registra o service worker em ./sw.js.
+5. No Android/Chrome deve aparecer opção de instalar após carregamento.
+6. No iPhone/Safari normalmente aparece como "Adicionar à Tela de Início"; isso é o comportamento do iOS.
 
-COMO SUBIR NO GITHUB
+Se só aparecer "atalho":
+- confira se a URL é HTTPS do GitHub Pages;
+- confira se sw.js abre sem erro 404;
+- confira se manifest.json abre sem erro 404;
+- espere alguns segundos com a página aberta;
+- feche e abra novamente;
+- limpe cache se já havia uma versão anterior.
 
-1. Crie um repositório no GitHub.
-   Sugestão de nome:
-   NovaSabaraMensalidades
-
-2. Envie TODOS os arquivos deste pacote para a raiz do repositório.
-   Importante: o arquivo index.html precisa ficar na raiz, junto com manifest.json e service-worker.js.
-
-3. No GitHub, entre no repositório e vá em:
-   Settings > Pages
-
-4. Em Build and deployment:
-   Source: Deploy from a branch
-   Branch: main
-   Folder: /root
-
-5. Clique em Save.
-
-6. Aguarde alguns minutos.
-
-A URL ficará parecida com:
-https://SEU-USUARIO.github.io/NovaSabaraMensalidades/
-
-COMO INSTALAR NO PC
-1. Abra a URL publicada no Chrome ou Edge.
-2. Clique no ícone de instalação na barra do navegador.
-3. Instale como app.
-
-COMO INSTALAR NO CELULAR
-Android:
-1. Abra a URL no Chrome.
-2. Toque nos três pontinhos.
-3. Escolha "Adicionar à tela inicial" ou "Instalar app".
-
-iPhone:
-1. Abra a URL no Safari.
-2. Toque no botão Compartilhar.
-3. Escolha "Adicionar à Tela de Início".
-
-OBSERVAÇÕES IMPORTANTES
-- O app salva dados no navegador.
-- Use Exportar Backup para guardar uma cópia dos dados.
-- Use Importar Backup para restaurar.
-- Se trocar arquivos no GitHub e não atualizar no celular, feche o app, limpe cache ou aguarde o Service Worker atualizar.
-- Evite alterar nomes dos arquivos de ícones, manifest ou service-worker.
+URL esperada:
+https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/

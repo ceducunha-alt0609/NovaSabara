@@ -3058,6 +3058,285 @@
       box-shadow:none;
     }
 
+
+    /* Otimização mobile final */
+    @media(max-width:1020px){
+      html,
+      body{
+        width:100% !important;
+        min-height:100% !important;
+        height:auto !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+      }
+
+      body{
+        -webkit-overflow-scrolling:touch;
+      }
+
+      .app{
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:100dvh !important;
+        padding:10px !important;
+        overflow:visible !important;
+      }
+
+      .shell{
+        display:block !important;
+        height:auto !important;
+        overflow:visible !important;
+      }
+
+      .sidebar{
+        position:relative !important;
+        top:auto !important;
+        height:auto !important;
+        max-height:none !important;
+        overflow:visible !important;
+        margin:0 0 12px 0 !important;
+        padding:12px !important;
+        border-radius:18px !important;
+      }
+
+      .sidebar-top{
+        position:relative !important;
+        top:auto !important;
+        margin:0 0 12px 0 !important;
+        padding:0 0 10px 0 !important;
+        box-shadow:none !important;
+        background:transparent !important;
+        border-bottom:1px solid rgba(7,87,168,.12) !important;
+      }
+
+      .sidebar-brand-title{
+        font-size:20px !important;
+      }
+
+      .sidebar-brand-sub{
+        font-size:11px !important;
+      }
+
+      .sidebar-nav{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:8px !important;
+        margin-bottom:10px !important;
+      }
+
+      .side-link{
+        grid-template-columns:32px 1fr !important;
+        gap:8px !important;
+        padding:10px !important;
+        min-height:72px !important;
+        border-radius:14px !important;
+      }
+
+      .side-emoji{
+        width:32px !important;
+        height:32px !important;
+        font-size:16px !important;
+      }
+
+      .side-link strong{
+        font-size:12px !important;
+        line-height:1.25 !important;
+      }
+
+      .side-link small{
+        display:none !important;
+      }
+
+      .sidebar-box{
+        display:none !important;
+      }
+
+      .main-content{
+        width:100% !important;
+        height:auto !important;
+        overflow:visible !important;
+        padding:0 !important;
+      }
+
+      .main-content > .hero,
+      .hero{
+        position:relative !important;
+        top:auto !important;
+        z-index:1 !important;
+        margin:0 0 12px 0 !important;
+        padding:14px !important;
+        border-radius:18px !important;
+        box-shadow:0 12px 28px rgba(7,87,168,.10) !important;
+      }
+
+      .hero-content{
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        gap:10px !important;
+      }
+
+      .hero h1{
+        font-size:23px !important;
+        line-height:1.15 !important;
+      }
+
+      .hero p{
+        font-size:13px !important;
+        line-height:1.45 !important;
+      }
+
+      .brand-card{
+        justify-content:flex-start !important;
+      }
+
+      .brand-logo{
+        width:min(180px,70vw) !important;
+      }
+
+      .grid,
+      .grid-2,
+      .dash-grid,
+      .dash-main,
+      .dash-kpi-list,
+      .dash-donut-wrap,
+      .presentation-grid,
+      .settings-grid{
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        gap:12px !important;
+      }
+
+      .panel,
+      .result-card,
+      .dash-hero,
+      .dash-panel{
+        position:relative !important;
+        top:auto !important;
+        width:100% !important;
+        padding:14px !important;
+        border-radius:16px !important;
+        min-height:auto !important;
+      }
+
+      .kpis{
+        grid-template-columns:1fr 1fr !important;
+        gap:10px !important;
+      }
+
+      .kpi{
+        padding:13px !important;
+        border-radius:16px !important;
+      }
+
+      .kpi strong{
+        font-size:20px !important;
+      }
+
+      .turmas,
+      .extras,
+      .fields,
+      .nutrition-grid,
+      .activity-grid,
+      .current-price-grid,
+      .precision-grid,
+      .precision-grid.staff,
+      .scenario-grid,
+      .price-grid{
+        grid-template-columns:1fr !important;
+      }
+
+      .hours{
+        grid-template-columns:1fr 1fr !important;
+      }
+
+      .hour-btn{
+        min-height:78px !important;
+        padding:13px 8px !important;
+      }
+
+      .card-option{
+        min-height:auto !important;
+        padding:14px !important;
+      }
+
+      .total{
+        font-size:30px !important;
+      }
+
+      .total-box{
+        padding:16px !important;
+        border-radius:16px !important;
+      }
+
+      .report-toolbar,
+      .actions,
+      .presentation-actions{
+        display:grid !important;
+        grid-template-columns:1fr !important;
+      }
+
+      .btn,
+      .btn.secondary,
+      .import-label{
+        width:100% !important;
+        min-height:46px !important;
+      }
+
+      .comparison-wrap{
+        overflow-x:auto !important;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      .comparison-table{
+        min-width:760px !important;
+      }
+
+      .presentation-stage{
+        min-height:auto !important;
+        padding:0 !important;
+      }
+
+      .presentation-card{
+        padding:18px !important;
+        border-radius:18px !important;
+      }
+
+      .presentation-header{
+        display:block !important;
+      }
+
+      .custom-activity-card{
+        grid-template-columns:1fr !important;
+      }
+
+      input,
+      select,
+      button{
+        font-size:16px !important;
+      }
+    }
+
+    @media(max-width:520px){
+      .sidebar-nav,
+      .kpis{
+        grid-template-columns:1fr !important;
+      }
+
+      .hours{
+        grid-template-columns:1fr 1fr !important;
+      }
+
+      .section-title{
+        align-items:flex-start !important;
+        flex-direction:column !important;
+      }
+
+      .pill{
+        white-space:normal !important;
+      }
+    }
+
 </style>
 
   <meta name="application-name" content="Nova Sabará Mensalidades">
@@ -6137,7 +6416,7 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
       }, 1200);
 
       if('serviceWorker' in navigator){
-        navigator.serviceWorker.register('./service-worker.js').catch(err => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
           console.warn('Service Worker não registrado:', err);
         });
       }
@@ -6169,6 +6448,13 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
         if(banner) banner.style.display = 'none';
       });
     }
+
+
+    window.addEventListener('error', function(event){
+      const splash = document.getElementById('appSplash');
+      if(splash) splash.classList.add('hide');
+      console.error('Erro capturado:', event.error || event.message);
+    });
 
 </script>
 </body>
