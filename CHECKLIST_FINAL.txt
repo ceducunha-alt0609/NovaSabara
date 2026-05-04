@@ -1,0 +1,29 @@
+CHECKLIST FINAL
+
+[OK] index.html
+[OK] manifest.json
+[OK] service-worker.js
+[OK] icon-192.png
+[OK] icon-512.png
+[OK] apple-touch-icon.png
+[OK] favicon.png
+[OK] README.txt
+[OK] HTML referência manifest.json
+[OK] HTML referência favicon.png
+[OK] HTML referência apple-touch-icon.png
+[OK] Manifest referência icon-192.png
+[OK] Manifest referência icon-512.png
+[OK] Service Worker cache ./index.html
+[OK] Service Worker cache ./manifest.json
+[OK] Service Worker cache ./icon-192.png
+[OK] Service Worker cache ./icon-512.png
+
+
+ANTES DE PUBLICAR
+[ ] Subir todos os arquivos para a raiz do repositório
+[ ] Ativar GitHub Pages em Settings > Pages
+[ ] Abrir a URL publicada
+[ ] Conferir se não há erro 404 no manifest, ícones e service-worker
+[ ] Testar instalação no PC
+[ ] Testar "Adicionar à tela inicial" no celular
+[ ] Fazer um backup JSON inicial depois de preencher dados reais
