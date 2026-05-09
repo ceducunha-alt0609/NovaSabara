@@ -3337,12 +3337,666 @@
       }
     }
 
+
+    /* Mobile final: sidebar colapsável para não empurrar o conteúdo */
+    .mobile-menu-toggle{
+      display:none;
+    }
+
+    @media(max-width:1020px){
+      .app{
+        padding:8px !important;
+      }
+
+      .shell{
+        display:block !important;
+      }
+
+      .sidebar{
+        position:sticky !important;
+        top:0 !important;
+        z-index:1200 !important;
+        margin:0 0 8px 0 !important;
+        padding:10px !important;
+        border-radius:16px !important;
+        max-height:none !important;
+        height:auto !important;
+        overflow:visible !important;
+        background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,252,255,.90)) !important;
+        box-shadow:0 12px 28px rgba(7,87,168,.14) !important;
+        backdrop-filter:blur(18px) saturate(165%) !important;
+        -webkit-backdrop-filter:blur(18px) saturate(165%) !important;
+      }
+
+      .sidebar-top{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:10px !important;
+        position:relative !important;
+        top:auto !important;
+        margin:0 !important;
+        padding:0 !important;
+        border-bottom:none !important;
+        box-shadow:none !important;
+        background:transparent !important;
+      }
+
+      .sidebar-brand{
+        min-width:0 !important;
+        padding:0 !important;
+        margin:0 !important;
+      }
+
+      .sidebar-brand-title{
+        font-size:18px !important;
+        line-height:1.05 !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+
+      .sidebar-brand-sub{
+        font-size:10px !important;
+        margin-top:3px !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+
+      .mobile-menu-toggle{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:8px !important;
+        cursor:pointer !important;
+        border:none !important;
+        border-radius:999px !important;
+        padding:10px 14px !important;
+        color:white !important;
+        background:linear-gradient(135deg,#0757a8,#58c3de) !important;
+        box-shadow:0 10px 20px rgba(7,87,168,.18) !important;
+        font-weight:900 !important;
+        flex:0 0 auto !important;
+      }
+
+      .mobile-menu-toggle span{
+        font-size:18px !important;
+        line-height:1 !important;
+      }
+
+      .mobile-menu-toggle b{
+        font-size:13px !important;
+      }
+
+      .sidebar-nav,
+      .sidebar-box{
+        display:none !important;
+      }
+
+      .sidebar.mobile-open .sidebar-nav{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:8px !important;
+        margin:12px 0 0 0 !important;
+        max-height:62vh !important;
+        overflow-y:auto !important;
+        padding-right:4px !important;
+        scrollbar-width:thin !important;
+      }
+
+      .sidebar.mobile-open .sidebar-box{
+        display:none !important;
+      }
+
+      .sidebar.mobile-open .side-link{
+        min-height:64px !important;
+        padding:9px !important;
+      }
+
+      .main-content{
+        margin-top:0 !important;
+      }
+
+      .main-content > .hero,
+      .hero{
+        margin-top:0 !important;
+      }
+
+      .view{
+        scroll-margin-top:86px !important;
+      }
+    }
+
+    @media(max-width:520px){
+      .sidebar.mobile-open .sidebar-nav{
+        grid-template-columns:1fr !important;
+        max-height:68vh !important;
+      }
+
+      .mobile-menu-toggle b{
+        display:none !important;
+      }
+
+      .mobile-menu-toggle{
+        width:44px !important;
+        height:44px !important;
+        padding:0 !important;
+      }
+    }
+
+
+
+/* ===== CSS que estava depois do </html> foi reintegrado corretamente ===== */
+
+
+    /* ===== LAYOUT PRINCIPAL ===== */
+    .app{
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:10px 14px 10px 6px;
+    }
+
+    .shell{
+      grid-template-columns:300px minmax(0,1fr);
+      gap:20px;
+      height:calc(100vh - 20px);
+    }
+
+    .sidebar{
+      height:calc(100vh - 20px);
+      max-height:calc(100vh - 20px);
+      overflow-y:scroll;
+      overflow-x:hidden;
+      margin-left:0;
+      border-top-left-radius:12px;
+      border-bottom-left-radius:12px;
+      padding-top:0;
+    }
+
+    .sidebar-top{
+      position:sticky;
+      top:0;
+      z-index:30;
+      margin:0 -8px 12px -16px;
+      padding:16px 16px 10px 16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,252,255,.92));
+      backdrop-filter:blur(18px) saturate(170%);
+      -webkit-backdrop-filter:blur(18px) saturate(170%);
+      border-bottom:1px solid rgba(7,87,168,.14);
+      box-shadow:0 10px 20px rgba(7,87,168,.08);
+    }
+
+    .sidebar-brand{
+      padding:0;
+      margin-bottom:0;
+      border-bottom:none;
+    }
+
+    .sidebar-brand-title{ font-size:24px; }
+    .sidebar-brand-sub{ font-size:12px; }
+
+    .main-content{
+      position:relative;
+      height:calc(100vh - 20px);
+      overflow-y:auto;
+      overflow-x:hidden;
+      padding-right:10px;
+      scroll-padding-top:150px;
+      scrollbar-gutter:stable;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(7,87,168,.35) rgba(7,87,168,.08);
+    }
+
+    .main-content > .hero{
+      position:sticky;
+      top:0;
+      z-index:999;
+      margin-top:0;
+      margin-left:0;
+      margin-right:0;
+      margin-bottom:14px;
+      background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.78));
+      backdrop-filter:blur(24px) saturate(175%);
+      -webkit-backdrop-filter:blur(24px) saturate(175%);
+      box-shadow:0 16px 34px rgba(7,87,168,.16);
+    }
+
+    .hero-content{
+      grid-template-columns:minmax(0,1fr) 250px;
+    }
+
+    .brand-logo{ width:min(220px,100%); }
+
+    /* Scrollbars sidebar e conteúdo */
+    .sidebar::-webkit-scrollbar{ width:10px; }
+    .sidebar::-webkit-scrollbar-track{ background:rgba(7,87,168,.08); border-radius:999px; }
+    .sidebar::-webkit-scrollbar-thumb{ background:linear-gradient(180deg,#0757a8,#58c3de); border-radius:999px; border:2px solid rgba(255,255,255,.55); }
+    .main-content::-webkit-scrollbar{ width:10px; }
+    .main-content::-webkit-scrollbar-track{ background:rgba(7,87,168,.06); border-radius:999px; }
+    .main-content::-webkit-scrollbar-thumb{ background:linear-gradient(180deg,#0757a8,#58c3de,#ffc20a); border-radius:999px; border:2px solid rgba(255,255,255,.55); }
+
+    /* ===== RESPONSIVO MOBILE ===== */
+    @media(max-width:1020px){
+      html,body{ width:100%; min-height:100%; height:auto; overflow-x:hidden; overflow-y:auto; }
+      body{ -webkit-overflow-scrolling:touch; }
+
+      .app{ padding:8px; width:100%; max-width:100%; height:auto; min-height:100dvh; overflow:visible; }
+
+      .shell{ display:block; height:auto; overflow:visible; }
+
+      .sidebar{
+        position:sticky;
+        top:0;
+        z-index:1200;
+        height:auto;
+        max-height:none;
+        overflow:visible;
+        margin:0 0 8px 0;
+        padding:10px;
+        border-radius:16px;
+        background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,252,255,.90));
+        box-shadow:0 12px 28px rgba(7,87,168,.14);
+        backdrop-filter:blur(18px) saturate(165%);
+        -webkit-backdrop-filter:blur(18px) saturate(165%);
+      }
+
+      .sidebar-top{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        position:relative;
+        top:auto;
+        margin:0;
+        padding:0;
+        border-bottom:none;
+        box-shadow:none;
+        background:transparent;
+      }
+
+      .sidebar-brand{ min-width:0; padding:0; margin:0; }
+      .sidebar-brand-title{ font-size:18px; line-height:1.05; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .sidebar-brand-sub{ font-size:10px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+      .sidebar-nav,.sidebar-box{ display:none; }
+
+      .sidebar.mobile-open .sidebar-nav{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin:12px 0 0 0;
+        max-height:62vh;
+        overflow-y:auto;
+        padding-right:4px;
+        scrollbar-width:thin;
+      }
+
+      .sidebar.mobile-open .sidebar-box{ display:none; }
+      .sidebar.mobile-open .sidebar-box.mobile-visible{
+        display:block;
+        margin-top:10px;
+      }
+      .sidebar.mobile-open .side-link{ min-height:64px; padding:9px; }
+
+      .main-content{
+        width:100%;
+        height:auto;
+        overflow:visible;
+        padding:0;
+        scroll-padding-top:0;
+      }
+
+      .main-content > .hero,.hero{
+        position:relative;
+        top:auto;
+        z-index:1;
+        margin:0 0 12px 0;
+        padding:14px;
+        border-radius:18px;
+        box-shadow:0 12px 28px rgba(7,87,168,.10);
+      }
+
+      .hero-content{ display:grid; grid-template-columns:1fr; gap:10px; }
+      .hero h1{ font-size:23px; line-height:1.15; }
+      .hero p{ font-size:13px; line-height:1.45; }
+      .brand-card{ justify-content:flex-start; }
+      .brand-logo{ width:min(180px,70vw); }
+
+      .grid,.grid-2,.dash-grid,.dash-main,.dash-kpi-list,.dash-donut-wrap,.presentation-grid,.settings-grid{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+
+      .panel,.result-card,.dash-hero,.dash-panel{
+        position:relative;
+        top:auto;
+        width:100%;
+        padding:14px;
+        border-radius:16px;
+        min-height:auto;
+      }
+
+      .kpis{ grid-template-columns:1fr 1fr; gap:10px; }
+      .kpi{ padding:13px; border-radius:16px; }
+      .kpi strong{ font-size:20px; }
+
+      .turmas,.extras,.fields,.nutrition-grid,.activity-grid,.current-price-grid,.precision-grid,.precision-grid.staff,.scenario-grid,.price-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hours{ grid-template-columns:1fr 1fr; }
+      .hour-btn{ min-height:78px; padding:13px 8px; }
+      .card-option{ min-height:auto; padding:14px; }
+
+      .total{ font-size:30px; }
+      .total-box{ padding:16px; border-radius:16px; }
+
+      .report-toolbar,.actions,.presentation-actions{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .btn,.btn.secondary,.import-label{ width:100%; min-height:46px; }
+
+      .comparison-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .comparison-table{ min-width:760px; }
+
+      .presentation-stage{ min-height:auto; padding:0; }
+      .presentation-card{ padding:18px; border-radius:18px; }
+      .presentation-header{ display:block; }
+      .custom-activity-card{ grid-template-columns:1fr; }
+
+      input,select,button{ font-size:16px; }
+    }
+
+    @media(max-width:520px){
+      .sidebar.mobile-open .sidebar-nav{ grid-template-columns:1fr; max-height:68vh; }
+      .kpis{ grid-template-columns:1fr; }
+      .hours{ grid-template-columns:1fr 1fr; }
+      .section-title{ align-items:flex-start; flex-direction:column; }
+      .pill{ white-space:normal; }
+    }
+
+    /* Mobile menu toggle */
+    .mobile-menu-toggle{ display:none; }
+
+    @media(max-width:1020px){
+      .mobile-menu-toggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        cursor:pointer;
+        border:none;
+        border-radius:999px;
+        padding:10px 14px;
+        color:white;
+        background:linear-gradient(135deg,#0757a8,#58c3de);
+        box-shadow:0 10px 20px rgba(7,87,168,.18);
+        font-weight:900;
+        flex:0 0 auto;
+      }
+      .mobile-menu-toggle span{ font-size:18px; line-height:1; }
+      .mobile-menu-toggle b{ font-size:13px; }
+    }
+
+    @media(max-width:520px){
+      .mobile-menu-toggle b{ display:none; }
+      .mobile-menu-toggle{ width:44px; height:44px; padding:0; }
+    }
+
+    @media print{
+      body,.app,.shell,.sidebar,.main-content{ height:auto; max-height:none; overflow:visible; }
+      .hero,.main-content > .hero{ position:relative; box-shadow:none; }
+      .sidebar{ display:none; }
+      .shell{ display:block; }
+    }
+
+    /* ===== VISÃO RÁPIDA MOBILE ===== */
+    @media(max-width:1020px){
+      .sidebar-box.quick-view-mobile{
+        display:none;
+      }
+      .sidebar.mobile-open .sidebar-box.quick-view-mobile{
+        display:block;
+        margin-top:10px;
+        padding:10px;
+        border-radius:12px;
+        background:rgba(255,255,255,.72);
+        border:1px solid rgba(7,87,168,.12);
+      }
+    }
+
+    /* ===== HISTÓRICO DE REAJUSTES ===== */
+    .history-table-wrap{ overflow-x:auto; border-radius:14px; border:1px solid rgba(7,87,168,.13); margin-top:14px; }
+    .history-table{ width:100%; border-collapse:separate; border-spacing:0; min-width:600px; background:rgba(255,255,255,.78); }
+    .history-table th{ text-align:left; padding:12px; background:linear-gradient(135deg,rgba(7,87,168,.11),rgba(88,195,222,.10)); color:#123047; font-size:12px; border-bottom:1px solid rgba(7,87,168,.12); }
+    .history-table td{ padding:12px; border-bottom:1px solid rgba(7,87,168,.08); color:#244963; font-size:13px; font-weight:850; }
+    .history-table tr:last-child td{ border-bottom:none; }
+    .history-empty{ padding:24px; text-align:center; color:#667789; font-size:14px; font-weight:800; }
+
+    /* ===== IPCA / PROJEÇÃO ===== */
+    .ipca-banner{ display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:13px; background:rgba(255,194,10,.12); border:1px solid rgba(255,194,10,.32); margin-bottom:14px; }
+    .ipca-banner strong{ color:#8a5d00; font-size:14px; }
+    .ipca-banner span{ color:#667789; font-size:13px; font-weight:800; }
+    .ipca-input-wrap{ display:flex; align-items:center; gap:8px; margin-left:auto; }
+    .ipca-input-wrap input{ width:70px; border:1px solid rgba(255,194,10,.4); border-radius:10px; padding:8px 10px; font-weight:900; font-size:14px; text-align:right; background:rgba(255,255,255,.9); color:#8a5d00; }
+
+    .proj-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+    .proj-card{ border:1px solid rgba(7,87,168,.13); border-top:4px solid rgba(88,195,222,.82); border-radius:14px; padding:16px; background:rgba(255,255,255,.68); }
+    .proj-card:nth-child(2){ border-top-color:rgba(255,194,10,.86); }
+    .proj-card:nth-child(3){ border-top-color:rgba(24,160,88,.70); }
+    .proj-card small{ display:block; color:#667789; font-size:12px; font-weight:900; margin-bottom:7px; }
+    .proj-card strong{ display:block; color:#123047; font-size:22px; font-weight:900; letter-spacing:-.02em; }
+    .proj-card span{ display:block; margin-top:6px; color:#667789; font-size:11px; font-weight:800; }
+
+    @media(max-width:760px){ .proj-grid{ grid-template-columns:1fr 1fr; } }
+    @media(max-width:520px){ .proj-grid{ grid-template-columns:1fr; } }
+
+
+
+    /* ===== CORREÇÃO MOBILE DEFINITIVA - SIDEBAR COMPACTO ===== */
+    @media(max-width:1020px){
+      html,
+      body{
+        width:100% !important;
+        min-height:100% !important;
+        height:auto !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+      }
+
+      body{
+        overflow:auto !important;
+        -webkit-overflow-scrolling:touch !important;
+      }
+
+      .app{
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:100dvh !important;
+        margin:0 !important;
+        padding:8px !important;
+        overflow:visible !important;
+      }
+
+      .shell{
+        display:block !important;
+        width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        overflow:visible !important;
+      }
+
+      .sidebar{
+        position:sticky !important;
+        top:0 !important;
+        z-index:1200 !important;
+        width:100% !important;
+        height:auto !important;
+        max-height:none !important;
+        min-height:0 !important;
+        margin:0 0 10px 0 !important;
+        padding:9px 10px !important;
+        overflow:visible !important;
+        border-radius:16px !important;
+      }
+
+      .sidebar-top{
+        position:relative !important;
+        top:auto !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:10px !important;
+        min-height:44px !important;
+        margin:0 !important;
+        padding:0 !important;
+        border-bottom:0 !important;
+        box-shadow:none !important;
+        background:transparent !important;
+      }
+
+      .sidebar-brand-title{
+        font-size:18px !important;
+        line-height:1.05 !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+
+      .sidebar-brand-sub{
+        font-size:10px !important;
+        line-height:1.2 !important;
+        margin-top:2px !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+
+      .mobile-menu-toggle{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        flex:0 0 auto !important;
+      }
+
+      .sidebar:not(.mobile-open) .sidebar-nav,
+      .sidebar:not(.mobile-open) .sidebar-box{
+        display:none !important;
+      }
+
+      .sidebar.mobile-open .sidebar-nav{
+        display:flex !important;
+        gap:8px !important;
+        margin:10px -2px 0 !important;
+        padding:2px 2px 8px !important;
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        max-height:none !important;
+        -webkit-overflow-scrolling:touch !important;
+        scroll-snap-type:x proximity !important;
+      }
+
+      .sidebar.mobile-open .side-link{
+        flex:0 0 116px !important;
+        width:116px !important;
+        min-height:86px !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:6px !important;
+        padding:9px 8px !important;
+        text-align:center !important;
+        border-left-width:1px !important;
+        scroll-snap-align:start !important;
+      }
+
+      .sidebar.mobile-open .side-emoji{
+        width:34px !important;
+        height:34px !important;
+        font-size:17px !important;
+      }
+
+      .sidebar.mobile-open .side-link strong{
+        font-size:11px !important;
+        line-height:1.15 !important;
+        margin:0 !important;
+      }
+
+      .sidebar.mobile-open .side-link small,
+      .sidebar.mobile-open .sidebar-box{
+        display:none !important;
+      }
+
+      .main-content{
+        width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        overflow:visible !important;
+        padding-right:0 !important;
+      }
+
+      .main-content > .hero,
+      .hero{
+        position:relative !important;
+        top:auto !important;
+        z-index:1 !important;
+        margin-top:0 !important;
+        margin-bottom:10px !important;
+      }
+
+      .hero-content,
+      .dash-grid,
+      .dash-main,
+      .grid,
+      .grid-2,
+      .turmas,
+      .extras,
+      .fields,
+      .nutrition-grid,
+      .activity-grid,
+      .activity-fields{
+        grid-template-columns:1fr !important;
+      }
+
+      .result-card{
+        position:relative !important;
+        top:auto !important;
+      }
+    }
+
+    @media(max-width:520px){
+      .app{ padding:7px !important; }
+      .sidebar{ padding:8px !important; border-radius:14px !important; }
+      .sidebar.mobile-open .side-link{
+        flex-basis:104px !important;
+        width:104px !important;
+        min-height:78px !important;
+      }
+      .sidebar.mobile-open .side-link strong{ font-size:10.5px !important; }
+      .hero{ padding:13px !important; border-radius:16px !important; }
+      .brand-card{ padding:8px !important; }
+      .brand-logo{ width:min(150px,100%) !important; }
+      .hours,
+      .price-grid,
+      .current-price-grid{
+        grid-template-columns:1fr 1fr !important;
+      }
+      .panel{ padding:14px !important; }
+    }
+
 </style>
 
   <meta name="application-name" content="Nova Sabará Mensalidades">
   <meta name="apple-mobile-web-app-title" content="Nova Sabará">
   <meta name="theme-color" content="#0757a8">
-  <link rel="manifest" href="manifest.json">
+  <!-- manifest.json requer hospedagem externa -->
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
@@ -3370,10 +4024,14 @@
             <div class="sidebar-brand-title">Nova Sabará</div>
             <div class="sidebar-brand-sub">Mensalidades Premium</div>
           </div>
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-expanded="false">
+            <span>☰</span>
+            <b>Menu</b>
+          </button>
         </div>
 
         <nav class="sidebar-nav">
-          <button class="side-link active" data-view="dashboard">
+          <button class="side-link active" data-view="dashboard" aria-label="Ir para Dashboard">
             <span class="side-emoji">📌</span>
             <span>
               <strong>Dashboard</strong>
@@ -3381,7 +4039,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="comercial">
+          <button class="side-link" data-view="comercial" aria-label="Ir para Simulação Comercial">
             <span class="side-emoji">🏫</span>
             <span>
               <strong>Simulação Comercial</strong>
@@ -3389,7 +4047,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="formacao">
+          <button class="side-link" data-view="formacao" aria-label="Ir para Formação de Preço">
             <span class="side-emoji">📊</span>
             <span>
               <strong>Formação de Preço</strong>
@@ -3397,7 +4055,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="tabela">
+          <button class="side-link" data-view="tabela" aria-label="Ir para Tabela por Turma">
             <span class="side-emoji">🧾</span>
             <span>
               <strong>Tabela por Turma</strong>
@@ -3405,7 +4063,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="comparativo">
+          <button class="side-link" data-view="comparativo" aria-label="Ir para Comparativo Atual">
             <span class="side-emoji">⚖️</span>
             <span>
               <strong>Comparativo Atual</strong>
@@ -3413,7 +4071,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="precisao">
+          <button class="side-link" data-view="precisao" aria-label="Ir para Precisão Gerencial">
             <span class="side-emoji">🎯</span>
             <span>
               <strong>Precisão Gerencial</strong>
@@ -3421,7 +4079,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="alertas">
+          <button class="side-link" data-view="alertas" aria-label="Ir para Alertas Inteligentes">
             <span class="side-emoji">🚨</span>
             <span>
               <strong>Alertas Inteligentes</strong>
@@ -3429,7 +4087,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="apresentacao">
+          <button class="side-link" data-view="apresentacao" aria-label="Ir para Modo Apresentação">
             <span class="side-emoji">🎬</span>
             <span>
               <strong>Modo Apresentação</strong>
@@ -3437,7 +4095,7 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="configuracoes">
+          <button class="side-link" data-view="configuracoes" aria-label="Ir para Configurações">
             <span class="side-emoji">⚙️</span>
             <span>
               <strong>Configurações</strong>
@@ -3445,13 +4103,22 @@
             </span>
           </button>
 
-          <button class="side-link" data-view="relatorios">
+          <button class="side-link" data-view="relatorios" aria-label="Ir para Relatórios">
             <span class="side-emoji">🖨️</span>
             <span>
               <strong>Relatórios</strong>
               <small>Impressão e orçamentos</small>
             </span>
           </button>
+        
+          <button class="side-link" data-view="historico" aria-label="Ir para Histórico de Reajustes">
+            <span class="side-emoji">📅</span>
+            <span>
+              <strong>Histórico</strong>
+              <small>Reajustes e evolução</small>
+            </span>
+          </button>
+
         </nav>
 
         <div class="sidebar-box">
@@ -3460,7 +4127,7 @@
           <button class="sidebar-mini-btn" id="goPrintBtn">Ir para relatórios</button>
         </div>
 
-        <div class="sidebar-box">
+        <div class="sidebar-box quick-view-mobile">
           <small>Visão rápida</small>
           <div class="sidebar-kpi">
             <span>Mensalidade atual</span>
@@ -3581,6 +4248,34 @@
             <button class="btn secondary" id="dashGoReports">Gerar orçamento</button>
           </div>
         </div>
+
+        <div class="panel dash-panel" style="grid-column:1/-1">
+          <div class="section-title">
+            <h2>Projeção anual de receita</h2>
+            <span class="pill">Estimativa</span>
+          </div>
+          <div class="proj-grid">
+            <div class="proj-card">
+              <small>Cenário conservador (−10%)</small>
+              <strong id="projConservador">R$ 0,00</strong>
+              <span>receita anual estimada</span>
+            </div>
+            <div class="proj-card">
+              <small>Cenário realista (atual)</small>
+              <strong id="projRealista">R$ 0,00</strong>
+              <span>receita anual estimada</span>
+            </div>
+            <div class="proj-card">
+              <small>Cenário otimista (+10%)</small>
+              <strong id="projOtimista">R$ 0,00</strong>
+              <span>receita anual estimada</span>
+            </div>
+          </div>
+          <p style="margin:10px 0 0;color:#667789;font-size:13px;font-weight:800">
+            Estimativa baseada na receita mensal atual × 12 meses. Configure alunos e ticket médio na aba Precisão Gerencial.
+          </p>
+        </div>
+
       </div>
     </section>
 
@@ -3967,7 +4662,17 @@
             <button class="btn secondary" id="addCustomActivityBtn" type="button">Adicionar atividade personalizada</button>
           </div>
 
-          <div class="custom-activity-list" id="customActivityList"></div>
+          <div class="custom-activity-list" id="customActivityList">
+            <div class="settings-card">
+              <h3>Diagnóstico PWA</h3>
+              <p>Use para conferir se o navegador reconheceu o manifest e o service worker.</p>
+              <div class="app-checklist" id="pwaDiagnostic">
+                <span>Verificando...</span>
+              </div>
+              <button class="btn secondary" id="checkPwaBtn" type="button">Verificar instalação</button>
+            </div>
+
+          </div>
         </div>
 
         <aside class="panel result-card">
@@ -4054,6 +4759,7 @@
 
           <div class="actions">
             <button class="btn" id="copyCompareBtn">Copiar diagnóstico</button>
+          <button class="btn secondary" id="exportCsvBtn" style="margin-top:10px">Exportar tabela como CSV</button>
             <button class="btn secondary" id="resetCurrentPricesBtn">Preencher exemplo atual</button>
           </div>
         </aside>
@@ -4406,6 +5112,49 @@
 
         </div>
     </div>
+  
+    <section id="historico" class="view">
+      <div class="panel">
+        <div class="section-title">
+          <h2>Histórico de Reajustes</h2>
+          <span class="pill">Auditoria de preços</span>
+        </div>
+        <p class="helper-text">
+          Registre snapshots da tabela de preços para acompanhar a evolução histórica dos seus reajustes.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn" id="saveSnapshotBtn" style="max-width:260px">Salvar snapshot atual</button>
+          <button class="btn secondary" id="clearHistoryBtn" style="max-width:200px">Limpar histórico</button>
+        </div>
+        <div id="historyEmpty" class="history-empty">
+          Nenhum snapshot salvo ainda. Clique em "Salvar snapshot atual" para registrar os preços de hoje.
+        </div>
+        <div class="history-table-wrap" id="historyTableWrap" style="display:none">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Data</th><th>Turma / Horário</th><th>Preço praticado</th>
+                <th>Recomendado</th><th>Variação</th><th>IPCA ref.</th><th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+        <div id="snapshotModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9999;align-items:center;justify-content:center">
+          <div style="background:#fff;border-radius:20px;padding:28px;max-width:460px;width:92%;box-shadow:0 28px 60px rgba(7,87,168,.2)">
+            <h3 style="margin:0 0 14px;color:#123047">Salvar snapshot de preços</h3>
+            <p style="color:#667789;font-size:14px;margin:0 0 14px">Adicione uma descrição opcional (ex: "Reajuste jan/2025").</p>
+            <input id="snapshotDesc" type="text" placeholder="Descrição do snapshot..." style="width:100%;padding:13px 14px;border:1px solid rgba(7,87,168,.2);border-radius:12px;font-size:15px;margin-bottom:14px;box-sizing:border-box">
+            <div style="display:flex;gap:10px">
+              <button class="btn" id="confirmSnapshotBtn" style="flex:1">Salvar</button>
+              <button class="btn secondary" id="cancelSnapshotBtn" style="flex:1">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
   </main>
 
   <div class="toast" id="toast">Copiado!</div>
@@ -5396,7 +6145,20 @@ Observação: ${info.obs}`;
       `).join('');
 
       tableEl.innerHTML = `
-        <div class="comparison-wrap">
+        
+      <div class="ipca-banner">
+        <div>
+          <strong>Referência IPCA/INPC</strong>
+          <span style="display:block;margin-top:3px">Compare seus preços com a inflação oficial do período</span>
+          <span id="ipcaRateDisplay" style="display:block;margin-top:4px;color:#0757a8;font-size:11px;font-weight:900"></span>
+        </div>
+        <div class="ipca-input-wrap">
+          <label style="font-size:12px;font-weight:900;color:#8a5d00">IPCA anual (%)</label>
+          <input id="ipcaRate" type="number" value="5.0" min="0" max="100" step="0.1">
+        </div>
+      </div>
+
+      <div class="comparison-wrap">
           <table class="comparison-table">
             <thead>
               <tr>
@@ -6415,11 +7177,7 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
         if(splash) splash.classList.add('hide');
       }, 1200);
 
-      if('serviceWorker' in navigator){
-        navigator.serviceWorker.register('./sw.js').catch(err => {
-          console.warn('Service Worker não registrado:', err);
-        });
-      }
+      // Service Worker desabilitado (requer sw.js externo)
     });
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -6455,6 +7213,223 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
       if(splash) splash.classList.add('hide');
       console.error('Erro capturado:', event.error || event.message);
     });
+
+
+    // Registro PWA reforçado
+    async function registerPWA(){
+      const diagnostic = document.getElementById('pwaDiagnostic');
+      const lines = [];
+
+      const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      lines.push(`${isSecure ? '✅' : '❌'} URL segura/HTTPS`);
+
+      lines.push('ℹ️ Service Worker requer hospedagem com sw.js');
+
+      lines.push('ℹ️ Manifest requer hospedagem externa');
+
+      const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      lines.push(standalone ? '✅ Rodando como app' : 'ℹ️ Ainda rodando no navegador');
+
+      if(diagnostic){
+        diagnostic.innerHTML = lines.map(line => `<span>${line}</span>`).join('');
+      }
+    }
+
+    window.addEventListener('load', () => {
+      registerPWA();
+    });
+
+    const checkPwaBtn = document.getElementById('checkPwaBtn');
+    if(checkPwaBtn){
+      checkPwaBtn.addEventListener('click', registerPWA);
+    }
+
+
+    // Menu mobile colapsável
+    function setupMobileMenu(){
+      const sidebar = document.querySelector('.sidebar');
+      const toggle = document.getElementById('mobileMenuToggle');
+      if(!sidebar || !toggle) return;
+
+      toggle.addEventListener('click', () => {
+        const open = sidebar.classList.toggle('mobile-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.innerHTML = open ? '<span>×</span><b>Fechar</b>' : '<span>☰</span><b>Menu</b>';
+      });
+
+      document.querySelectorAll('.side-link').forEach(link => {
+        link.addEventListener('click', () => {
+          if(window.matchMedia('(max-width:1020px)').matches){
+            sidebar.classList.remove('mobile-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+            setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 80);
+          }
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if(!window.matchMedia('(max-width:1020px)').matches){
+          sidebar.classList.remove('mobile-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+        }
+      });
+    }
+
+    setupMobileMenu();
+
+    // ===== NOVAS FUNCIONALIDADES =====
+
+    // Projeção Anual
+    function updateAnnualProjection(){
+      let precision = null;
+      try{ precision = getPrecisionData(); }catch(e){}
+      const monthly = precision ? precision.revenueCurrent : 0;
+      const el1 = document.getElementById('projConservador');
+      const el2 = document.getElementById('projRealista');
+      const el3 = document.getElementById('projOtimista');
+      const money2 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+      if(el1) el1.textContent = money2.format(monthly * 0.90 * 12);
+      if(el2) el2.textContent = money2.format(monthly * 12);
+      if(el3) el3.textContent = money2.format(monthly * 1.10 * 12);
+    }
+
+    // IPCA banner
+    function getIPCARate(){
+      const el = document.getElementById('ipcaRate');
+      return Number(el ? el.value : 5) / 100;
+    }
+    function updateIPCABanner(){
+      const display = document.getElementById('ipcaRateDisplay');
+      if(!display) return;
+      const ipca = getIPCARate();
+      const pct = (ipca*100).toFixed(1);
+      display.textContent = `IPCA de ${pct}% ao ano → reajuste de referência para comparativo`;
+    }
+    const ipcaEl2 = document.getElementById('ipcaRate');
+    if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+    updateIPCABanner();
+
+    // Histórico de Reajustes
+    const HIST_KEY = 'novaSabaraHistorico_v2';
+    function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+    function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+
+    function renderHistory(){
+      const tbody = document.getElementById('historyTableBody');
+      const wrap = document.getElementById('historyTableWrap');
+      const empty = document.getElementById('historyEmpty');
+      if(!tbody) return;
+      const history = loadHistory();
+      if(history.length === 0){
+        if(wrap) wrap.style.display = 'none';
+        if(empty) empty.style.display = '';
+        return;
+      }
+      if(wrap) wrap.style.display = '';
+      if(empty) empty.style.display = 'none';
+      const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+      tbody.innerHTML = [...history].reverse().map(e => `
+        <tr>
+          <td>${e.date}</td>
+          <td>${e.turma} · ${e.hour}h</td>
+          <td>${money3.format(e.currentPrice)}</td>
+          <td>${money3.format(e.recommendedPrice)}</td>
+          <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+          <td>${e.ipca||'—'}</td>
+          <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function doAddSnapshot(desc){
+      let rows = [];
+      try{ rows = getComparisonData(); }catch(e){ showToast('Configure os preços primeiro!'); return; }
+      const ipca = getIPCARate();
+      const dateStr = new Date().toLocaleDateString('pt-BR');
+      const history = loadHistory();
+      rows.forEach(r => {
+        history.push({
+          date: dateStr, turma: r.turma, hour: r.hour,
+          currentPrice: r.current, recommendedPrice: r.recommended,
+          diff: r.diff, diffPct: r.diffPercent.toFixed(1),
+          ipca: (ipca*100).toFixed(1)+'%', description: desc||''
+        });
+      });
+      saveHistory(history);
+      renderHistory();
+      showToast('Snapshot salvo com ' + rows.length + ' entradas!');
+    }
+
+    // Modal controls
+    const snapshotModal = document.getElementById('snapshotModal');
+    const saveSnapshotBtn2 = document.getElementById('saveSnapshotBtn');
+    const confirmSnapshotBtn2 = document.getElementById('confirmSnapshotBtn');
+    const cancelSnapshotBtn2 = document.getElementById('cancelSnapshotBtn');
+    const snapshotDesc2 = document.getElementById('snapshotDesc');
+    const clearHistoryBtn2 = document.getElementById('clearHistoryBtn');
+
+    if(saveSnapshotBtn2){
+      saveSnapshotBtn2.addEventListener('click', ()=>{
+        if(snapshotModal){ snapshotModal.style.display='flex'; if(snapshotDesc2) snapshotDesc2.focus(); }
+      });
+    }
+    if(confirmSnapshotBtn2){
+      confirmSnapshotBtn2.addEventListener('click', ()=>{
+        doAddSnapshot(snapshotDesc2 ? snapshotDesc2.value : '');
+        if(snapshotModal) snapshotModal.style.display='none';
+        if(snapshotDesc2) snapshotDesc2.value='';
+      });
+    }
+    if(cancelSnapshotBtn2){
+      cancelSnapshotBtn2.addEventListener('click', ()=>{ if(snapshotModal) snapshotModal.style.display='none'; });
+    }
+    if(clearHistoryBtn2){
+      clearHistoryBtn2.addEventListener('click', ()=>{
+        if(confirm('Deseja limpar todo o histórico?')){ saveHistory([]); renderHistory(); showToast('Histórico limpo!'); }
+      });
+    }
+
+    // Export CSV
+    function exportCSV(){
+      let rows = [];
+      try{ rows = getComparisonData(); }catch(e){ showToast('Configure os dados primeiro!'); return; }
+      const ipca = getIPCARate();
+      const headers = ['Turma','Idade','Horario','Preco Atual','Recomendado','Diferenca','Diferenca %','Status','Ref IPCA'];
+      const lines = [headers.join(';')];
+      rows.forEach(r => {
+        const ipcaRef = (r.current*(1+ipca)).toFixed(2).replace('.',',');
+        lines.push([r.turma,r.idade,r.hour+'h',
+          r.current.toFixed(2).replace('.',','),
+          r.recommended.toFixed(2).replace('.',','),
+          r.diff.toFixed(2).replace('.',','),
+          r.diffPercent.toFixed(1).replace('.',',')+'%',
+          r.status.label, ipcaRef].join(';'));
+      });
+      const blob = new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href=url; a.download='mensalidades-'+new Date().toISOString().slice(0,10)+'.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      showToast('CSV exportado!');
+    }
+
+    const exportCsvBtn2 = document.getElementById('exportCsvBtn');
+    if(exportCsvBtn2){ exportCsvBtn2.addEventListener('click', exportCSV); }
+
+    // Hook into side navigation for new views
+    document.querySelectorAll('.side-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const view = link.dataset.view;
+        if(view === 'historico') setTimeout(renderHistory, 50);
+        if(view === 'dashboard') setTimeout(updateAnnualProjection, 50);
+      });
+    });
+
+    // Initial calls (deferred to after DOM + data ready)
+    setTimeout(()=>{ renderHistory(); updateAnnualProjection(); updateIPCABanner(); }, 300);
 
 </script>
 </body>
