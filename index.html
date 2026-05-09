@@ -3997,8 +3997,16 @@
   <meta name="apple-mobile-web-app-title" content="Nova Sabará">
   <meta name="theme-color" content="#0757a8">
   <!-- manifest.json requer hospedagem externa -->
-  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+
+  <!-- PWA / instalação como aplicativo -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <meta name="application-name" content="Nova Sabará Mensalidades">
+  <meta name="apple-mobile-web-app-title" content="Nova Sabará">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 </head>
 <body>
@@ -7432,5 +7440,17 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
     setTimeout(()=>{ renderHistory(); updateAnnualProjection(); updateIPCABanner(); }, 300);
 
 </script>
+
+<script>
+  // Registro do Service Worker: necessário para instalação como app/PWA
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(function () { console.log('[NovaSabara] Service Worker registrado.'); })
+        .catch(function (err) { console.warn('[NovaSabara] Falha no Service Worker:', err); });
+    });
+  }
+</script>
+
 </body>
 </html>
