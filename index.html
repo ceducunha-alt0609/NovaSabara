@@ -6682,8 +6682,16 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
       return state;
     }
 
+    function isValidSavedState(state){
+      return !!(state && typeof state==='object' && !Array.isArray(state) &&
+        state.inputs && typeof state.inputs==='object' && !Array.isArray(state.inputs) &&
+        state.checks && typeof state.checks==='object' && !Array.isArray(state.checks) &&
+        (!('customActivities' in state) || Array.isArray(state.customActivities)) &&
+        (!('history' in state) || Array.isArray(state.history)));
+    }
+
     function applyState(state){
-      if(!state) return;
+      if(!isValidSavedState(state)) throw new Error('Estrutura de dados inválida');
       isRestoringState = true;
 
       if(Array.isArray(state.customActivities)){
@@ -6737,7 +6745,13 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
     }
 
     function exportBackup(){
-      const blob = new Blob([JSON.stringify(collectState(), null, 2)], {type:'application/json'});
+      const state = collectState();
+      try{
+        const historyRaw = localStorage.getItem('novaSabaraHistorico_v2');
+        state.history = historyRaw ? JSON.parse(historyRaw) : [];
+        if(!Array.isArray(state.history)) state.history = [];
+      }catch(e){ state.history = []; }
+      const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -6755,8 +6769,11 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
       reader.onload = () => {
         try{
           const state = JSON.parse(reader.result);
+          if(!isValidSavedState(state)) throw new Error('Estrutura de backup inválida');
           applyState(state);
+          if(Array.isArray(state.history)) localStorage.setItem('novaSabaraHistorico_v2', JSON.stringify(state.history));
           saveState();
+          if(typeof renderHistory==='function') renderHistory();
           showToast('Backup importado!');
         }catch(e){
           alert('Não foi possível importar este backup. Verifique se o arquivo é JSON válido.');
@@ -6768,7 +6785,9 @@ ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, oc
     function clearSavedData(){
       if(confirm('Deseja limpar os dados salvos neste navegador?')){
         localStorage.removeItem('novaSabaraCalculadoraState');
+        localStorage.removeItem('novaSabaraHistorico_v2');
         showToast('Dados locais limpos!');
+        setTimeout(()=>location.reload(), 250);
       }
     }
 

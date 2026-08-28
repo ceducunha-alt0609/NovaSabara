@@ -1,3 +1,4 @@
+const CACHE_PREFIX = 'nova-sabara-';
 const CACHE_NAME = 'nova-sabara-mensalidades-v2';
 const APP_SHELL = [
   './',

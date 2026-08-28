@@ -1,4 +1,5 @@
-const CACHE_NAME = 'nova-sabara-pwa-v1.0.0';
+const CACHE_PREFIX = 'nova-sabara-';
+const CACHE_NAME = 'nova-sabara-pwa-v1.1-audit-safety';
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -20,9 +21,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.map((key) => {
-      if (key !== CACHE_NAME) return caches.delete(key);
-    }))).then(() => self.clients.claim())
+    caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key)))).then(() => self.clients.claim())
   );
 });
 
