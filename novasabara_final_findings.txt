@@ -1,0 +1,1743 @@
+
+## function updateSmartAlerts
+-- 6872-6905 --
+6872: 
+6873:       if(alerts.filter(a => a.type === 'danger').length === 0 && alerts.filter(a => a.type === 'warn').length === 0){
+6874:         alerts.push({type:'ok', title:'Sem alertas críticos', text:'Os principais indicadores estão em faixa operacional confortável.'});
+6875:       }
+6876: 
+6877:       return alerts;
+6878:     }
+6879: 
+6880:     function updateSmartAlerts(){
+6881:       const wrap = document.getElementById('smartAlertList');
+6882:       if(!wrap) return;
+6883: 
+6884:       let alerts = [];
+6885:       try{ alerts = buildSmartAlerts(); }catch(e){ return; }
+6886: 
+6887:       wrap.innerHTML = alerts.map(a => `
+6888:         <div class="smart-alert ${a.type}">
+6889:           <b>${a.title}</b>
+6890:           <span>${a.text}</span>
+6891:         </div>
+6892:       `).join('');
+6893: 
+6894:       const danger = alerts.filter(a => a.type === 'danger').length;
+6895:       const warn = alerts.filter(a => a.type === 'warn').length;
+6896:       const ok = alerts.filter(a => a.type === 'ok').length;
+6897: 
+6898:       const level = document.getElementById('riskLevel');
+6899:       const box = document.getElementById('riskBox');
+6900:       if(box) box.className = 'total-box';
+6901:       if(danger > 0){
+6902:         level.textContent = 'Alto';
+6903:       }else if(warn > 0){
+6904:         level.textContent = 'Médio';
+6905:       }else{
+
+## function renderHistory
+-- 7354-7387 --
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+7385:         </tr>
+7386:       `).join('');
+7387:     }
+
+## function addHistory
+
+## function saveHistory
+-- 7352-7385 --
+7352:     }
+7353:     const ipcaEl2 = document.getElementById('ipcaRate');
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+7385:         </tr>
+
+## function getHistory
+
+## HIST_KEY
+-- 7350-7383 --
+7350:       const pct = (ipca*100).toFixed(1);
+7351:       display.textContent = `IPCA de ${pct}% ao ano → reajuste de referência para comparativo`;
+7352:     }
+7353:     const ipcaEl2 = document.getElementById('ipcaRate');
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+-- 7351-7384 --
+7351:       display.textContent = `IPCA de ${pct}% ao ano → reajuste de referência para comparativo`;
+7352:     }
+7353:     const ipcaEl2 = document.getElementById('ipcaRate');
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+-- 7352-7385 --
+7352:     }
+7353:     const ipcaEl2 = document.getElementById('ipcaRate');
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+7385:         </tr>
+
+## innerHTML =
+-- 5262-5295 --
+5262:       link.addEventListener('click', () => {
+5263:         setActiveView(link.dataset.view);
+5264:         updateAll();
+5265:       });
+5266:     });
+5267: 
+5268:     function renderTurmas(){
+5269:       const turmasEl = document.getElementById('turmas');
+5270:       turmasEl.innerHTML = Object.entries(commercialTable).map(([key, item]) => `
+5271:         <button class="card-option ${key === selectedTurma ? 'active' : ''}" data-turma="${key}">
+5272:           <div class="card-inner">
+5273:             <b>${item.nome}</b>
+5274:             <span>${item.idade}</span>
+5275:             <em>${item.nota}</em>
+5276:           </div>
+5277:         </button>
+5278:       `).join('');
+5279: 
+5280:       document.querySelectorAll('[data-turma]').forEach(btn => {
+5281:         btn.addEventListener('click', () => {
+5282:           selectedTurma = btn.dataset.turma;
+5283:           updateAll();
+5284:         });
+5285:       });
+5286:     }
+5287: 
+5288:     function renderHours(){
+5289:       const hoursEl = document.getElementById('hours');
+5290:       hoursEl.innerHTML = [6,8,10,12].map(hour => `
+5291:         <button class="hour-btn ${hour === selectedHour ? 'active' : ''}" data-hour="${hour}">
+5292:           <b>${hour}h</b>
+5293:           <span>${hour <= 6 ? 'Meio período' : hour >= 10 ? 'Integral' : 'Estendido'}</span>
+5294:         </button>
+5295:       `).join('');
+-- 5282-5315 --
+5282:           selectedTurma = btn.dataset.turma;
+5283:           updateAll();
+5284:         });
+5285:       });
+5286:     }
+5287: 
+5288:     function renderHours(){
+5289:       const hoursEl = document.getElementById('hours');
+5290:       hoursEl.innerHTML = [6,8,10,12].map(hour => `
+5291:         <button class="hour-btn ${hour === selectedHour ? 'active' : ''}" data-hour="${hour}">
+5292:           <b>${hour}h</b>
+5293:           <span>${hour <= 6 ? 'Meio período' : hour >= 10 ? 'Integral' : 'Estendido'}</span>
+5294:         </button>
+5295:       `).join('');
+5296: 
+5297:       document.querySelectorAll('[data-hour]').forEach(btn => {
+5298:         btn.addEventListener('click', () => {
+5299:           selectedHour = Number(btn.dataset.hour);
+5300:           updateAll();
+5301:         });
+5302:       });
+5303:     }
+5304: 
+5305: 
+5306:     const activities = [
+5307:       { id:'natacao', nome:'Natação' },
+5308:       { id:'judo', nome:'Judô' },
+5309:       { id:'bale', nome:'Balé' },
+5310:       { id:'teatro', nome:'Teatro' }
+5311:     ];
+5312: 
+5313:     function getSelectedActivities(){
+5314:       const chosen = [];
+5315:       activities.forEach(act => {
+-- 5389-5422 --
+5389:         : `<div class="line"><span>Extras da escola</span><strong>Não há</strong></div>`;
+5390: 
+5391:       const atividadeHtml = calc.activitiesChosen.length
+5392:         ? calc.activitiesChosen.map(line => `
+5393:           <div class="line positive"><span>${line.nome}</span><strong>+ ${money.format(line.mensal)}</strong></div>
+5394:         `).join('')
+5395:         : `<div class="line"><span>Atividades extras</span><strong>Não há</strong></div>`;
+5396: 
+5397:       document.getElementById('summary').innerHTML = `
+5398:         <div class="line"><span>Turma</span><strong>${calc.turma.nome}</strong></div>
+5399:         <div class="line"><span>Idade</span><strong>${calc.turma.idade}</strong></div>
+5400:         <div class="line"><span>Carga horária</span><strong>${selectedHour}h</strong></div>
+5401:         <div class="line"><span>Valor base</span><strong>${money.format(calc.base)}</strong></div>
+5402:         <div class="line"><span>Alimentação calculada</span><strong>${money.format(calc.alimentacaoCalculada)}</strong></div>
+5403:         ${extraHtml}
+5404:         ${atividadeHtml}
+5405:         <div class="line"><span>Mensalidade cheia</span><strong>${money.format(calc.mensalidadeCheia)}</strong></div>
+5406:         <div class="line negative"><span>Desconto mensal</span><strong>- ${money.format(calc.desconto)}</strong></div>
+5407:         <div class="line"><span>Matrícula escolar</span><strong>${money.format(calc.matricula)}</strong></div>
+5408:         <div class="line"><span>Matrícula das atividades</span><strong>${money.format(calc.atividadesMatricula)}</strong></div>
+5409:         <div class="line"><span>Material/taxas iniciais</span><strong>${money.format(calc.custosIniciais)}</strong></div>
+5410:         <div class="line final"><span>Total inicial estimado</span><strong>${money.format(calc.totalInicial)}</strong></div>
+5411:       `;
+5412: 
+5413:       const extrasText = calc.extraLines.length
+5414:         ? calc.extraLines.map(x => x.nome.toLowerCase()).join(', ')
+5415:         : 'sem extras escolares adicionais';
+5416: 
+5417:       const atividadesText = calc.activitiesChosen.length
+5418:         ? calc.activitiesChosen.map(x => x.nome.toLowerCase()).join(', ')
+5419:         : 'sem atividades extras';
+5420: 
+5421:       document.getElementById('proposal').innerHTML = `
+5422:         <strong>Texto para atendimento:</strong><br>
+-- 5413-5446 --
+5413:       const extrasText = calc.extraLines.length
+5414:         ? calc.extraLines.map(x => x.nome.toLowerCase()).join(', ')
+5415:         : 'sem extras escolares adicionais';
+5416: 
+5417:       const atividadesText = calc.activitiesChosen.length
+5418:         ? calc.activitiesChosen.map(x => x.nome.toLowerCase()).join(', ')
+5419:         : 'sem atividades extras';
+5420: 
+5421:       document.getElementById('proposal').innerHTML = `
+5422:         <strong>Texto para atendimento:</strong><br>
+5423:         Olá! A simulação para <strong>${calc.turma.nome}</strong>, faixa de <strong>${calc.turma.idade}</strong>, no período de <strong>${selectedHour}h</strong>, ficou em <strong>${money.format(calc.mensalidade)}</strong> mensais. A composição considera ${extrasText} e ${atividadesText}. 
+5424:         ${(calc.matricula > 0 || calc.atividadesMatricula > 0) ? `O investimento inicial estimado, incluindo matrícula escolar e atividades, fica em <strong>${money.format(calc.totalInicial)}</strong>.` : ''}
+5425:       `;
+5426:     }
+5427: 
+5428:     function getCostSum(selector){
+5429:       return [...document.querySelectorAll(selector)].reduce((acc, el) => acc + Number(el.value || 0), 0);
+5430:     }
+5431: 
+5432:     function getFormationCalc(){
+5433:       const fixed = getCostSum('[data-cost]');
+5434:       const variable = getCostSum('[data-var]');
+5435:       const alunos = Math.max(1, n('alunos'));
+5436:       const pagantes = Math.max(1, n('pagantes'));
+5437:       const inad = Math.min(80, Math.max(0, n('inadimplencia'))) / 100;
+5438:       const reserva = Math.max(0, n('reserva')) / 100;
+5439:       const margem = Math.max(0, n('margem')) / 100;
+5440:       const arredondar = Number(document.getElementById('arredondar').value || 1);
+5441: 
+5442:       // Custos variáveis existem para todos os alunos ativos, inclusive bolsistas.
+5443:       // A mensalidade mínima precisa ratear o custo total da escola entre os pagantes.
+5444:       const custoTotalEscola = fixed + (variable * alunos);
+5445:       const custoFixoAluno = fixed / pagantes;
+5446:       const custoTotalAluno = custoTotalEscola / pagantes;
+-- 5460-5493 --
+5460:         fixed, variable, alunos, pagantes, inad, reserva, margem, arredondar,
+5461:         custoFixoAluno, custoTotalAluno, minima, segura, ideal,
+5462:         receitaMinima, receitaSegura, receitaIdeal, receitaIdealLiquida, custoTotalEscola, lucroIdeal
+5463:       };
+5464:     }
+5465: 
+5466:     function renderWeights(){
+5467:       const wrap = document.getElementById('weights');
+5468:       wrap.innerHTML = Object.entries(commercialTable).map(([key, t]) => `
+5469:         <div class="weight-row">
+5470:           <div>
+5471:             <b>${t.nome}</b>
+5472:             <small>${t.idade} · peso sugerido</small>
+5473:           </div>
+5474:           <input data-weight="${key}" type="number" min=".5" max="2" step=".01" value="${t.peso}">
+5475:         </div>
+5476:       `).join('');
+5477: 
+5478:       document.querySelectorAll('[data-weight]').forEach(input => {
+5479:         input.addEventListener('input', updateAll);
+5480:       });
+5481:     }
+5482: 
+5483:     function getWeight(key){
+5484:       const el = document.querySelector(`[data-weight="${key}"]`);
+5485:       return Number(el?.value || commercialTable[key].peso || 1);
+5486:     }
+5487: 
+5488:     function updateFormation(){
+5489:       const c = getFormationCalc();
+5490: 
+5491:       document.getElementById('kpiMinima').textContent = money.format(c.minima);
+5492:       document.getElementById('kpiSegura').textContent = money.format(c.segura);
+5493:       document.getElementById('kpiIdeal').textContent = money.format(c.ideal);
+-- 5491-5524 --
+5491:       document.getElementById('kpiMinima').textContent = money.format(c.minima);
+5492:       document.getElementById('kpiSegura').textContent = money.format(c.segura);
+5493:       document.getElementById('kpiIdeal').textContent = money.format(c.ideal);
+5494:       document.getElementById('seguraMain').textContent = money.format(c.segura);
+5495:       document.getElementById('idealMain').textContent = money.format(c.ideal);
+5496: 
+5497:       const margemReal = c.receitaIdealLiquida > 0 ? (c.lucroIdeal / c.receitaIdealLiquida) * 100 : 0;
+5498: 
+5499:       document.getElementById('formacaoSummary').innerHTML = `
+5500:         <div class="line"><span>Custos fixos mensais</span><strong>${money.format(c.fixed)}</strong></div>
+5501:         <div class="line"><span>Custo variável por aluno</span><strong>${money.format(c.variable)}</strong></div>
+5502:         <div class="line"><span>Custo fixo por pagante</span><strong>${money.format(c.custoFixoAluno)}</strong></div>
+5503:         <div class="line"><span>Custo total rateado por pagante</span><strong>${money.format(c.custoTotalAluno)}</strong></div>
+5504:         <div class="line warn"><span>Inadimplência usada</span><strong>${(c.inad*100).toFixed(1)}%</strong></div>
+5505:         <div class="line positive"><span>Receita ideal líquida estimada</span><strong>${money.format(c.receitaIdealLiquida)}</strong></div>
+5506:         <div class="line final"><span>Resultado ideal estimado</span><strong>${money.format(c.lucroIdeal)}</strong></div>
+5507:       `;
+5508: 
+5509:       const status = c.lucroIdeal > 0
+5510:         ? `Com os parâmetros atuais, a mensalidade ideal gera uma margem operacional aproximada de <strong>${margemReal.toFixed(1)}%</strong> sobre a receita.`
+5511:         : `Atenção: com os parâmetros atuais, a escola pode operar sem folga suficiente. Revise custos, alunos pagantes, inadimplência ou margem.`;
+5512: 
+5513:       document.getElementById('insight').innerHTML = `
+5514:         <strong>Leitura gerencial:</strong><br>
+5515:         A mensalidade mínima cobre o custo. A segura protege contra inadimplência e cria reserva. A ideal permite reinvestimento e crescimento. ${status}
+5516:       `;
+5517: 
+5518:       updatePriceTable();
+5519:     }
+5520: 
+5521:     function updatePriceTable(){
+5522:       const c = getFormationCalc();
+5523:       const target = c.segura;
+5524:       const html = Object.entries(commercialTable).map(([key, turma]) => {
+-- 5505-5538 --
+5505:         <div class="line positive"><span>Receita ideal líquida estimada</span><strong>${money.format(c.receitaIdealLiquida)}</strong></div>
+5506:         <div class="line final"><span>Resultado ideal estimado</span><strong>${money.format(c.lucroIdeal)}</strong></div>
+5507:       `;
+5508: 
+5509:       const status = c.lucroIdeal > 0
+5510:         ? `Com os parâmetros atuais, a mensalidade ideal gera uma margem operacional aproximada de <strong>${margemReal.toFixed(1)}%</strong> sobre a receita.`
+5511:         : `Atenção: com os parâmetros atuais, a escola pode operar sem folga suficiente. Revise custos, alunos pagantes, inadimplência ou margem.`;
+5512: 
+5513:       document.getElementById('insight').innerHTML = `
+5514:         <strong>Leitura gerencial:</strong><br>
+5515:         A mensalidade mínima cobre o custo. A segura protege contra inadimplência e cria reserva. A ideal permite reinvestimento e crescimento. ${status}
+5516:       `;
+5517: 
+5518:       updatePriceTable();
+5519:     }
+5520: 
+5521:     function updatePriceTable(){
+5522:       const c = getFormationCalc();
+5523:       const target = c.segura;
+5524:       const html = Object.entries(commercialTable).map(([key, turma]) => {
+5525:         const turmaWeight = getWeight(key);
+5526:         const cells = [6,8,10,12].map(h => {
+5527:           const value = roundTo(target * turmaWeight * hourWeights[h], c.arredondar);
+5528:           return `
+5529:             <div class="price-cell">
+5530:               <small>${h} horas</small>
+5531:               <strong>${money.format(value)}</strong>
+5532:             </div>
+5533:           `;
+5534:         }).join('');
+5535: 
+5536:         return `
+5537:           <div class="panel" style="box-shadow:none;margin-bottom:10px;background:rgba(255,255,255,.54)">
+5538:             <div class="section-title">
+-- 5539-5572 --
+5539:               <h2>${turma.nome}</h2>
+5540:               <span class="pill">${turma.idade}</span>
+5541:             </div>
+5542:             <div class="price-grid">${cells}</div>
+5543:           </div>
+5544:         `;
+5545:       }).join('');
+5546: 
+5547:       document.getElementById('tablePrices').innerHTML = html;
+5548: 
+5549:       document.getElementById('tableSummary').innerHTML = `
+5550:         <div class="line"><span>Base usada</span><strong>Mensalidade segura</strong></div>
+5551:         <div class="line"><span>Valor base 8h</span><strong>${money.format(c.segura)}</strong></div>
+5552:         <div class="line"><span>Meio período 6h</span><strong>88% da base</strong></div>
+5553:         <div class="line"><span>Integral 10h</span><strong>115% da base</strong></div>
+5554:         <div class="line final"><span>Integral 12h</span><strong>130% da base</strong></div>
+5555:       `;
+5556:     }
+5557: 
+5558:     function copyCommercial(){
+5559:       const calc = getCommercialCalc();
+5560:       const extrasText = calc.extraLines.length
+5561:         ? calc.extraLines.map(x => x.nome).join(', ')
+5562:         : 'sem extras escolares adicionais';
+5563: 
+5564:       const atividadesText = calc.activitiesChosen.length
+5565:         ? calc.activitiesChosen.map(x => `${x.nome} (${money.format(x.mensal)}/mês)`).join(', ')
+5566:         : 'sem atividades extras';
+5567: 
+5568:       const text = `Olá! Segue a simulação de mensalidade:
+5569: 
+5570: Turma: ${calc.turma.nome}
+5571: Faixa etária: ${calc.turma.idade}
+5572: Carga horária: ${selectedHour}h
+-- 5541-5574 --
+5541:             </div>
+5542:             <div class="price-grid">${cells}</div>
+5543:           </div>
+5544:         `;
+5545:       }).join('');
+5546: 
+5547:       document.getElementById('tablePrices').innerHTML = html;
+5548: 
+5549:       document.getElementById('tableSummary').innerHTML = `
+5550:         <div class="line"><span>Base usada</span><strong>Mensalidade segura</strong></div>
+5551:         <div class="line"><span>Valor base 8h</span><strong>${money.format(c.segura)}</strong></div>
+5552:         <div class="line"><span>Meio período 6h</span><strong>88% da base</strong></div>
+5553:         <div class="line"><span>Integral 10h</span><strong>115% da base</strong></div>
+5554:         <div class="line final"><span>Integral 12h</span><strong>130% da base</strong></div>
+5555:       `;
+5556:     }
+5557: 
+5558:     function copyCommercial(){
+5559:       const calc = getCommercialCalc();
+5560:       const extrasText = calc.extraLines.length
+5561:         ? calc.extraLines.map(x => x.nome).join(', ')
+5562:         : 'sem extras escolares adicionais';
+5563: 
+5564:       const atividadesText = calc.activitiesChosen.length
+5565:         ? calc.activitiesChosen.map(x => `${x.nome} (${money.format(x.mensal)}/mês)`).join(', ')
+5566:         : 'sem atividades extras';
+5567: 
+5568:       const text = `Olá! Segue a simulação de mensalidade:
+5569: 
+5570: Turma: ${calc.turma.nome}
+5571: Faixa etária: ${calc.turma.idade}
+5572: Carga horária: ${selectedHour}h
+5573: Valor base: ${money.format(calc.base)}
+5574: Alimentação calculada: ${money.format(calc.alimentacaoCalculada)}
+-- 5961-5994 --
+5961:           </div>
+5962:         </article>
+5963:       `;
+5964:     }
+5965: 
+5966:     function updateReports(){
+5967:       const area = document.getElementById('printReports');
+5968:       if(!area) return;
+5969:       area.innerHTML = buildBudgetReport() + buildManagementReport() + buildTableReport() + buildComparisonReport() + buildPrecisionReport() + buildAlertsReport();
+5970:     }
+5971: 
+5972:     function printReportOnly(type){
+5973:       updateReports();
+5974:       document.querySelectorAll('.print-sheet').forEach(sheet => {
+5975:         if(type === 'all'){
+5976:           sheet.style.display = '';
+5977:         }else{
+5978:           sheet.style.display = sheet.dataset.report === type ? '' : 'none';
+5979:         }
+5980:       });
+5981:       window.print();
+5982:       setTimeout(() => {
+5983:         document.querySelectorAll('.print-sheet').forEach(sheet => sheet.style.display = '');
+5984:       }, 500);
+5985:     }
+5986: 
+5987:     function copyBudgetText(){
+5988:       const calc = getCommercialCalc();
+5989:       const info = getSchoolInfo();
+5990:       const extrasText = calc.extraLines.length ? calc.extraLines.map(x => x.nome).join(', ') : 'Sem extras escolares adicionais';
+5991:       const atividadesText = calc.activitiesChosen.length ? calc.activitiesChosen.map(x => `${x.nome} (${money.format(x.mensal)}/mês)`).join(', ') : 'Sem atividades extras';
+5992:       const text = `ORÇAMENTO DE MENSALIDADE
+5993: 
+5994: Escola: ${info.name}
+-- 6031-6064 --
+6031:       jardim1:{6:900,8:1080,10:1280,12:1480},
+6032:       jardim2:{6:880,8:1050,10:1250,12:1450}
+6033:     };
+6034: 
+6035:     function renderCurrentPriceInputs(){
+6036:       const wrap = document.getElementById('currentPriceInputs');
+6037:       if(!wrap) return;
+6038: 
+6039:       wrap.innerHTML = Object.entries(commercialTable).map(([key, turma]) => {
+6040:         const fields = [6,8,10,12].map(h => {
+6041:           const def = currentPriceDefaults[key]?.[h] || 0;
+6042:           return `
+6043:             <div class="current-price-field">
+6044:               <label>${h}h</label>
+6045:               <input data-current-price="${key}_${h}" data-turma-current="${key}" data-hour-current="${h}" type="number" value="${def}" min="0" step="10">
+6046:             </div>
+6047:           `;
+6048:         }).join('');
+6049: 
+6050:         return `
+6051:           <div class="current-price-card">
+6052:             <div class="current-price-head">
+6053:               <b>${turma.nome}</b>
+6054:               <small>${turma.idade}</small>
+6055:             </div>
+6056:             <div class="current-price-grid">${fields}</div>
+6057:           </div>
+6058:         `;
+6059:       }).join('');
+6060: 
+6061:       document.querySelectorAll('[data-current-price]').forEach(input => {
+6062:         input.addEventListener('input', updateAll);
+6063:         input.addEventListener('change', updateAll);
+6064:       });
+-- 6122-6155 --
+6122:       const aboveRows = rows.filter(r => r.diff >= 0);
+6123:       const avgGap = belowRows.length ? belowRows.reduce((acc,r) => acc + Math.abs(r.diff), 0) / belowRows.length : 0;
+6124:       const avgPercent = rows.length ? rows.reduce((acc,r) => acc + r.diffPercent, 0) / rows.length : 0;
+6125:       const totalGap = belowRows.reduce((acc,r) => acc + Math.abs(r.diff), 0);
+6126:       const biggestGap = [...rows].sort((a,b) => a.diff - b.diff)[0];
+6127: 
+6128:       document.getElementById('avgGap').textContent = money.format(avgGap);
+6129: 
+6130:       document.getElementById('compareSummary').innerHTML = `
+6131:         <div class="line"><span>Itens abaixo do recomendado</span><strong>${belowRows.length}</strong></div>
+6132:         <div class="line"><span>Itens equilibrados/acima</span><strong>${aboveRows.length}</strong></div>
+6133:         <div class="line"><span>Diferença média geral</span><strong>${avgPercent.toFixed(1)}%</strong></div>
+6134:         <div class="line"><span>Defasagem total da tabela</span><strong>${money.format(totalGap)}</strong></div>
+6135:         <div class="line final"><span>Maior atenção</span><strong>${biggestGap ? `${biggestGap.turma} ${biggestGap.hour}h` : '-'}</strong></div>
+6136:       `;
+6137: 
+6138:       let insight = '';
+6139:       if(belowRows.length === 0){
+6140:         insight = '<strong>Tabela saudável.</strong> Os preços praticados estão alinhados ou acima da referência segura calculada.';
+6141:       }else if(belowRows.length <= 5){
+6142:         insight = '<strong>Ajuste pontual recomendado.</strong> Existem poucos horários abaixo da referência. Vale corrigir por turma/horário sem mexer em toda a tabela.';
+6143:       }else{
+6144:         insight = '<strong>Revisão de tabela recomendada.</strong> Muitos preços estão abaixo da referência segura. Considere uma transição gradual de reajuste.';
+6145:       }
+6146:       document.getElementById('compareInsight').innerHTML = insight;
+6147: 
+6148:       const body = rows.map(r => `
+6149:         <tr>
+6150:           <td>${r.turma}<br><span style="color:#667789;font-size:11px">${r.idade} · ${r.hour}h</span></td>
+6151:           <td>${money.format(r.current)}</td>
+6152:           <td>${money.format(r.recommended)}</td>
+6153:           <td style="color:${r.diff < 0 ? '#df3b3b' : '#18a058'}">${money.format(r.diff)}</td>
+6154:           <td>${r.diffPercent.toFixed(1)}%</td>
+6155:           <td><span class="status-pill ${r.status.cls}">${r.status.label}</span></td>
+-- 6138-6171 --
+6138:       let insight = '';
+6139:       if(belowRows.length === 0){
+6140:         insight = '<strong>Tabela saudável.</strong> Os preços praticados estão alinhados ou acima da referência segura calculada.';
+6141:       }else if(belowRows.length <= 5){
+6142:         insight = '<strong>Ajuste pontual recomendado.</strong> Existem poucos horários abaixo da referência. Vale corrigir por turma/horário sem mexer em toda a tabela.';
+6143:       }else{
+6144:         insight = '<strong>Revisão de tabela recomendada.</strong> Muitos preços estão abaixo da referência segura. Considere uma transição gradual de reajuste.';
+6145:       }
+6146:       document.getElementById('compareInsight').innerHTML = insight;
+6147: 
+6148:       const body = rows.map(r => `
+6149:         <tr>
+6150:           <td>${r.turma}<br><span style="color:#667789;font-size:11px">${r.idade} · ${r.hour}h</span></td>
+6151:           <td>${money.format(r.current)}</td>
+6152:           <td>${money.format(r.recommended)}</td>
+6153:           <td style="color:${r.diff < 0 ? '#df3b3b' : '#18a058'}">${money.format(r.diff)}</td>
+6154:           <td>${r.diffPercent.toFixed(1)}%</td>
+6155:           <td><span class="status-pill ${r.status.cls}">${r.status.label}</span></td>
+6156:         </tr>
+6157:       `).join('');
+6158: 
+6159:       tableEl.innerHTML = `
+6160:         
+6161:       <div class="ipca-banner">
+6162:         <div>
+6163:           <strong>Referência IPCA/INPC</strong>
+6164:           <span style="display:block;margin-top:3px">Compare seus preços com a inflação oficial do período</span>
+6165:           <span id="ipcaRateDisplay" style="display:block;margin-top:4px;color:#0757a8;font-size:11px;font-weight:900"></span>
+6166:         </div>
+6167:         <div class="ipca-input-wrap">
+6168:           <label style="font-size:12px;font-weight:900;color:#8a5d00">IPCA anual (%)</label>
+6169:           <input id="ipcaRate" type="number" value="5.0" min="0" max="100" step="0.1">
+6170:         </div>
+6171:       </div>
+-- 6151-6184 --
+6151:           <td>${money.format(r.current)}</td>
+6152:           <td>${money.format(r.recommended)}</td>
+6153:           <td style="color:${r.diff < 0 ? '#df3b3b' : '#18a058'}">${money.format(r.diff)}</td>
+6154:           <td>${r.diffPercent.toFixed(1)}%</td>
+6155:           <td><span class="status-pill ${r.status.cls}">${r.status.label}</span></td>
+6156:         </tr>
+6157:       `).join('');
+6158: 
+6159:       tableEl.innerHTML = `
+6160:         
+6161:       <div class="ipca-banner">
+6162:         <div>
+6163:           <strong>Referência IPCA/INPC</strong>
+6164:           <span style="display:block;margin-top:3px">Compare seus preços com a inflação oficial do período</span>
+6165:           <span id="ipcaRateDisplay" style="display:block;margin-top:4px;color:#0757a8;font-size:11px;font-weight:900"></span>
+6166:         </div>
+6167:         <div class="ipca-input-wrap">
+6168:           <label style="font-size:12px;font-weight:900;color:#8a5d00">IPCA anual (%)</label>
+6169:           <input id="ipcaRate" type="number" value="5.0" min="0" max="100" step="0.1">
+6170:         </div>
+6171:       </div>
+6172: 
+6173:       <div class="comparison-wrap">
+6174:           <table class="comparison-table">
+6175:             <thead>
+6176:               <tr>
+6177:                 <th>Turma / horário</th>
+6178:                 <th>Atual</th>
+6179:                 <th>Recomendado</th>
+6180:                 <th>Diferença</th>
+6181:                 <th>%</th>
+6182:                 <th>Status</th>
+6183:               </tr>
+6184:             </thead>
+-- 6227-6260 --
+6227:       jardim2:{capacity:20,enrolled:18,payers:17,discount:5,teacher:1,assistant:0,teacherSalary:3000,assistantSalary:1750,charges:45}
+6228:     };
+6229: 
+6230:     function renderPrecisionInputs(){
+6231:       const classWrap = document.getElementById('classPrecisionInputs');
+6232:       const staffWrap = document.getElementById('staffPrecisionInputs');
+6233:       if(!classWrap || !staffWrap) return;
+6234: 
+6235:       classWrap.innerHTML = Object.entries(commercialTable).map(([key, turma]) => {
+6236:         const d = precisionDefaults[key];
+6237:         return `
+6238:           <div class="precision-card">
+6239:             <div class="precision-head">
+6240:               <b>${turma.nome}</b>
+6241:               <small>${turma.idade}</small>
+6242:             </div>
+6243:             <div class="precision-grid">
+6244:               <div class="precision-field">
+6245:                 <label>Capacidade</label>
+6246:                 <input data-precision="${key}_capacity" type="number" value="${d.capacity}" min="1" step="1">
+6247:               </div>
+6248:               <div class="precision-field">
+6249:                 <label>Matriculados</label>
+6250:                 <input data-precision="${key}_enrolled" type="number" value="${d.enrolled}" min="0" step="1">
+6251:               </div>
+6252:               <div class="precision-field">
+6253:                 <label>Pagantes</label>
+6254:                 <input data-precision="${key}_payers" type="number" value="${d.payers}" min="0" step="1">
+6255:               </div>
+6256:               <div class="precision-field">
+6257:                 <label>Desconto médio %</label>
+6258:                 <input data-precision="${key}_discount" type="number" value="${d.discount}" min="0" max="100" step=".5">
+6259:               </div>
+6260:             </div>
+-- 6257-6290 --
+6257:                 <label>Desconto médio %</label>
+6258:                 <input data-precision="${key}_discount" type="number" value="${d.discount}" min="0" max="100" step=".5">
+6259:               </div>
+6260:             </div>
+6261:           </div>
+6262:         `;
+6263:       }).join('');
+6264: 
+6265:       staffWrap.innerHTML = Object.entries(commercialTable).map(([key, turma]) => {
+6266:         const d = precisionDefaults[key];
+6267:         return `
+6268:           <div class="precision-card">
+6269:             <div class="precision-head">
+6270:               <b>${turma.nome}</b>
+6271:               <small>Equipe direta da turma</small>
+6272:             </div>
+6273:             <div class="precision-grid staff">
+6274:               <div class="precision-field">
+6275:                 <label>Professores</label>
+6276:                 <input data-precision="${key}_teacher" type="number" value="${d.teacher}" min="0" step=".5">
+6277:               </div>
+6278:               <div class="precision-field">
+6279:                 <label>Auxiliares</label>
+6280:                 <input data-precision="${key}_assistant" type="number" value="${d.assistant}" min="0" step=".5">
+6281:               </div>
+6282:               <div class="precision-field">
+6283:                 <label>Salário prof.</label>
+6284:                 <input data-precision="${key}_teacherSalary" type="number" value="${d.teacherSalary}" min="0" step="100">
+6285:               </div>
+6286:               <div class="precision-field">
+6287:                 <label>Salário aux.</label>
+6288:                 <input data-precision="${key}_assistantSalary" type="number" value="${d.assistantSalary}" min="0" step="100">
+6289:               </div>
+6290:               <div class="precision-field">
+-- 6449-6482 --
+6449:             </div>
+6450:             <span class="opportunity-pill">${item.open} vagas</span>
+6451:             <span class="opportunity-pill">${money.format(item.potential)}</span>
+6452:             <span class="opportunity-pill ${cls}">${item.priority}</span>
+6453:           </div>
+6454:         `;
+6455:       }).join('');
+6456: 
+6457:       target.innerHTML = `
+6458:         <div class="section-title" style="margin-top:2px;margin-bottom:10px">
+6459:           <h2 style="font-size:16px">Onde captar primeiro</h2>
+6460:           <span class="pill">potencial por turma</span>
+6461:         </div>
+6462:         <div class="opportunity-list">${rows}</div>
+6463:       `;
+6464:     }
+6465: 
+6466:     function updatePrecision(){
+6467:       const monthly = document.getElementById('precisionMonthlyResult');
+6468:       if(!monthly) return;
+6469: 
+6470:       let data;
+6471:       try{ data = getPrecisionData(); }catch(e){ console.warn('Precisão aguardando campos:', e); return; }
+6472: 
+6473:       monthly.textContent = money.format(data.monthlyResult);
+6474:       document.getElementById('breakEvenStudents').textContent = `${data.breakEven} alunos`;
+6475:       document.getElementById('avgTicketCurrent').textContent = money.format(data.avgTicketCurrent);
+6476:       document.getElementById('overallOccupancy').textContent = `${(data.occupancy*100).toFixed(1)}%`;
+6477:       const goalData = getEnrollmentGoalData(data);
+6478:       const studentsGoalEl = document.getElementById('studentsForProfitGoal');
+6479:       if(studentsGoalEl) studentsGoalEl.textContent = `${goalData.studentsToProfit} alunos`;
+6480: 
+6481:       document.getElementById('precisionSummary').innerHTML = `
+6482:         <div class="line"><span>Capacidade total</span><strong>${data.totalCapacity} alunos</strong></div>
+-- 6473-6506 --
+6473:       monthly.textContent = money.format(data.monthlyResult);
+6474:       document.getElementById('breakEvenStudents').textContent = `${data.breakEven} alunos`;
+6475:       document.getElementById('avgTicketCurrent').textContent = money.format(data.avgTicketCurrent);
+6476:       document.getElementById('overallOccupancy').textContent = `${(data.occupancy*100).toFixed(1)}%`;
+6477:       const goalData = getEnrollmentGoalData(data);
+6478:       const studentsGoalEl = document.getElementById('studentsForProfitGoal');
+6479:       if(studentsGoalEl) studentsGoalEl.textContent = `${goalData.studentsToProfit} alunos`;
+6480: 
+6481:       document.getElementById('precisionSummary').innerHTML = `
+6482:         <div class="line"><span>Capacidade total</span><strong>${data.totalCapacity} alunos</strong></div>
+6483:         <div class="line"><span>Matriculados</span><strong>${data.totalEnrolled} alunos</strong></div>
+6484:         <div class="line"><span>Pagantes</span><strong>${data.totalPayers} alunos</strong></div>
+6485:         <div class="line"><span>Receita atual líquida estimada</span><strong>${money.format(data.revenueCurrent)}</strong></div>
+6486:         <div class="line"><span>Custo total estimado</span><strong>${money.format(data.totalCost)}</strong></div>
+6487:         <div class="line"><span>Custo de equipe por turma</span><strong>${money.format(data.staffCost)}</strong></div>
+6488:         <div class="line"><span>Meta de lucro mensal</span><strong>${money.format(goalData.goal)}</strong></div>
+6489:         <div class="line"><span>Resultado adicional necessário</span><strong>${money.format(goalData.amountToGoal)}</strong></div>
+6490:         <div class="line"><span>Ticket usado na meta</span><strong>${money.format(goalData.ticket)}</strong></div>
+6491:         <div class="line final"><span>Contribuição líquida por novo aluno</span><strong>${money.format(goalData.netContribution)}</strong></div>
+6492:       `;
+6493: 
+6494:       let title, text;
+6495:       if(data.monthlyResult < 0){
+6496:         title = 'Atenção: operação no vermelho';
+6497:         text = 'Com os preços atuais, ocupação e custos informados, o resultado mensal estimado fica negativo. Priorize reajuste gradual, aumento de ocupação e revisão dos descontos.';
+6498:       }else if(data.occupancy < .75){
+6499:         title = 'Ocupação ainda pressiona o preço';
+6500:         text = 'A escola está positiva ou próxima disso, mas a ocupação abaixo de 75% pode deixar algumas turmas caras por aluno. Trabalhe captação e rematrícula.';
+6501:       }else{
+6502:         title = 'Gestão em faixa saudável';
+6503:         text = 'Os dados indicam uma operação mais equilibrada. Use o comparativo para corrigir pontos específicos de defasagem por turma e horário.';
+6504:       }
+6505:       document.getElementById('precisionInsight').innerHTML = `<strong>${title}</strong>${text}`;
+6506: 
+-- 6497-6530 --
+6497:         text = 'Com os preços atuais, ocupação e custos informados, o resultado mensal estimado fica negativo. Priorize reajuste gradual, aumento de ocupação e revisão dos descontos.';
+6498:       }else if(data.occupancy < .75){
+6499:         title = 'Ocupação ainda pressiona o preço';
+6500:         text = 'A escola está positiva ou próxima disso, mas a ocupação abaixo de 75% pode deixar algumas turmas caras por aluno. Trabalhe captação e rematrícula.';
+6501:       }else{
+6502:         title = 'Gestão em faixa saudável';
+6503:         text = 'Os dados indicam uma operação mais equilibrada. Use o comparativo para corrigir pontos específicos de defasagem por turma e horário.';
+6504:       }
+6505:       document.getElementById('precisionInsight').innerHTML = `<strong>${title}</strong>${text}`;
+6506: 
+6507:       document.getElementById('scenarioConservative').textContent = money.format(estimateScenario(data, -.10, .03));
+6508:       document.getElementById('scenarioRealistic').textContent = money.format(estimateScenario(data, 0, 0));
+6509:       document.getElementById('scenarioIdeal').textContent = money.format(estimateScenario(data, .10, -.02));
+6510: 
+6511:       updateEnrollmentOpportunity(data);
+6512:       updateAdjustmentTable(data);
+6513:     }
+6514: 
+6515:     function updateAdjustmentTable(data){
+6516:       const table = document.getElementById('adjustmentTable');
+6517:       if(!table) return;
+6518:       const percent = Number(document.getElementById('adjustPercent')?.value || 0) / 100;
+6519:       const mode = document.getElementById('adjustMode')?.value || 'all';
+6520: 
+6521:       const rows = [];
+6522:       Object.entries(commercialTable).forEach(([key, turma]) => {
+6523:         [6,8,10,12].forEach(hour => {
+6524:           const current = getCurrentPrice(key, hour);
+6525:           const recommended = getRecommendedPrice(key, hour);
+6526:           const shouldApply = mode === 'all' || current < recommended;
+6527:           const adjusted = shouldApply ? current * (1 + percent) : current;
+6528:           const impactMonthly = adjusted - current;
+6529:           rows.push({turma:turma.nome, hour, current, recommended, adjusted, impactMonthly});
+6530:         });
+-- 6536-6569 --
+6536:           <td>${r.turma} ${r.hour}h</td>
+6537:           <td>${money.format(r.current)}</td>
+6538:           <td>${money.format(r.recommended)}</td>
+6539:           <td>${money.format(r.adjusted)}</td>
+6540:           <td>${money.format(r.impactMonthly)}</td>
+6541:         </tr>
+6542:       `).join('');
+6543: 
+6544:       table.innerHTML = `
+6545:         <div class="comparison-wrap">
+6546:           <table class="comparison-table">
+6547:             <thead>
+6548:               <tr>
+6549:                 <th>Turma / horário</th>
+6550:                 <th>Atual</th>
+6551:                 <th>Recomendado</th>
+6552:                 <th>Novo valor</th>
+6553:                 <th>Diferença por aluno</th>
+6554:               </tr>
+6555:             </thead>
+6556:             <tbody>${body}</tbody>
+6557:           </table>
+6558:         </div>
+6559:         <div class="print-note" style="margin-top:14px">
+6560:           Impacto médio por combinação de turma/horário: <strong>${money.format(totalMonthlyImpact)}</strong>. Para impacto real mensal, multiplique pela quantidade de alunos em cada modalidade.
+6561:         </div>
+6562:       `;
+6563:     }
+6564: 
+6565:     function copyPrecisionDiagnosis(){
+6566:       const d = getPrecisionData();
+6567:       const goalData = getEnrollmentGoalData(d);
+6568:       const text = `DIAGNÓSTICO DE PRECISÃO GERENCIAL
+6569: 
+-- 6614-6647 --
+6614:     function getInitialCosts(){
+6615:       return n('materialInicial') + n('uniformeInicial') + n('agendaApp') + n('eventosProjetos');
+6616:     }
+6617: 
+6618:     function renderCustomActivities(){
+6619:       const wrap = document.getElementById('customActivityList');
+6620:       if(!wrap) return;
+6621: 
+6622:       wrap.innerHTML = customActivities.map((act, index) => `
+6623:         <div class="custom-activity-card">
+6624:           <label>
+6625:             Ativo
+6626:             <input data-custom-active="${index}" type="checkbox" ${act.active ? 'checked' : ''}>
+6627:           </label>
+6628:           <label>
+6629:             Nome da atividade
+6630:             <input data-custom-name="${index}" type="text" value="${act.name || ''}" placeholder="Ex.: Inglês">
+6631:           </label>
+6632:           <label>
+6633:             Mensalidade
+6634:             <input data-custom-monthly="${index}" type="number" value="${act.monthly || 0}" min="0" step="10">
+6635:           </label>
+6636:           <label>
+6637:             Matrícula
+6638:             <input data-custom-enroll="${index}" type="number" value="${act.enroll || 0}" min="0" step="10">
+6639:           </label>
+6640:           <button class="remove-custom" data-custom-remove="${index}" type="button">Remover</button>
+6641:         </div>
+6642:       `).join('');
+6643: 
+6644:       wrap.querySelectorAll('input').forEach(input => {
+6645:         input.addEventListener('input', () => {
+6646:           syncCustomActivitiesFromDOM();
+6647:           updateAll();
+-- 6879-6912 --
+6879: 
+6880:     function updateSmartAlerts(){
+6881:       const wrap = document.getElementById('smartAlertList');
+6882:       if(!wrap) return;
+6883: 
+6884:       let alerts = [];
+6885:       try{ alerts = buildSmartAlerts(); }catch(e){ return; }
+6886: 
+6887:       wrap.innerHTML = alerts.map(a => `
+6888:         <div class="smart-alert ${a.type}">
+6889:           <b>${a.title}</b>
+6890:           <span>${a.text}</span>
+6891:         </div>
+6892:       `).join('');
+6893: 
+6894:       const danger = alerts.filter(a => a.type === 'danger').length;
+6895:       const warn = alerts.filter(a => a.type === 'warn').length;
+6896:       const ok = alerts.filter(a => a.type === 'ok').length;
+6897: 
+6898:       const level = document.getElementById('riskLevel');
+6899:       const box = document.getElementById('riskBox');
+6900:       if(box) box.className = 'total-box';
+6901:       if(danger > 0){
+6902:         level.textContent = 'Alto';
+6903:       }else if(warn > 0){
+6904:         level.textContent = 'Médio';
+6905:       }else{
+6906:         level.textContent = 'Baixo';
+6907:         if(box) box.classList.add('safe');
+6908:       }
+6909: 
+6910:       document.getElementById('riskSummary').innerHTML = `
+6911:         <div class="line negative"><span>Alertas críticos</span><strong>${danger}</strong></div>
+6912:         <div class="line warn"><span>Alertas de atenção</span><strong>${warn}</strong></div>
+-- 6902-6935 --
+6902:         level.textContent = 'Alto';
+6903:       }else if(warn > 0){
+6904:         level.textContent = 'Médio';
+6905:       }else{
+6906:         level.textContent = 'Baixo';
+6907:         if(box) box.classList.add('safe');
+6908:       }
+6909: 
+6910:       document.getElementById('riskSummary').innerHTML = `
+6911:         <div class="line negative"><span>Alertas críticos</span><strong>${danger}</strong></div>
+6912:         <div class="line warn"><span>Alertas de atenção</span><strong>${warn}</strong></div>
+6913:         <div class="line positive"><span>Indicadores saudáveis</span><strong>${ok}</strong></div>
+6914:         <div class="line final"><span>Total de leituras</span><strong>${alerts.length}</strong></div>
+6915:       `;
+6916:     }
+6917: 
+6918:     function copyAlerts(){
+6919:       const alerts = buildSmartAlerts();
+6920:       const text = 'ALERTAS INTELIGENTES\\n\\n' + alerts.map(a => `[${a.type.toUpperCase()}] ${a.title}: ${a.text}`).join('\\n');
+6921:       navigator.clipboard.writeText(text).then(() => showToast('Alertas copiados!'));
+6922:     }
+6923: 
+6924:     function updatePresentation(){
+6925:       const el = document.getElementById('presMonthly');
+6926:       if(!el) return;
+6927:       const calc = getCommercialCalc();
+6928:       const form = getFormationCalc();
+6929:       let precision = null;
+6930:       try{ precision = getPrecisionData(); }catch(e){}
+6931: 
+6932:       el.textContent = money.format(calc.mensalidade);
+6933:       document.getElementById('presClass').textContent = `${calc.turma.nome} · ${selectedHour}h`;
+6934:       document.getElementById('presSafe').textContent = money.format(form.segura);
+6935:       document.getElementById('presResult').textContent = precision ? money.format(precision.monthlyResult) : 'R$ 0,00';
+-- 6943-6976 --
+6943:         text = 'A mensalidade simulada está acima da referência segura, com melhor proteção contra inadimplência, reserva e custos operacionais.';
+6944:       }else if(calc.mensalidade >= form.minima){
+6945:         title = 'Proposta exige cuidado';
+6946:         text = 'A mensalidade cobre o mínimo, mas ainda não alcança a faixa segura. Use apenas como exceção comercial.';
+6947:       }else{
+6948:         title = 'Proposta não recomendada';
+6949:         text = 'O valor está abaixo da mensalidade mínima calculada e pode gerar prejuízo operacional.';
+6950:       }
+6951:       document.getElementById('presentationInsight').innerHTML = `<strong>${title}</strong>${text}`;
+6952:     }
+6953: 
+6954:     function updateSettingsSummary(){
+6955:       const wrap = document.getElementById('settingsSummary');
+6956:       if(!wrap) return;
+6957:       let precision = null;
+6958:       try{ precision = getPrecisionData(); }catch(e){}
+6959:       const state = collectState();
+6960:       wrap.innerHTML = `
+6961:         <div class="line"><span>Campos salvos</span><strong>${Object.keys(state.inputs).length + Object.keys(state.checks).length}</strong></div>
+6962:         <div class="line"><span>Atividades personalizadas</span><strong>${customActivities.length}</strong></div>
+6963:         <div class="line"><span>Última versão</span><strong>v10 operacional</strong></div>
+6964:         <div class="line final"><span>Pagantes estimados</span><strong>${precision ? precision.totalPayers : '-'}</strong></div>
+6965:       `;
+6966:     }
+6967: 
+6968:     function updateDashboard(){
+6969:       const dashMonthly = document.getElementById('dashMonthly');
+6970:       if(!dashMonthly) return;
+6971: 
+6972:       let calc, form;
+6973:       try{
+6974:         calc = getCommercialCalc();
+6975:         form = getFormationCalc();
+6976:       }catch(e){
+-- 6952-6985 --
+6952:     }
+6953: 
+6954:     function updateSettingsSummary(){
+6955:       const wrap = document.getElementById('settingsSummary');
+6956:       if(!wrap) return;
+6957:       let precision = null;
+6958:       try{ precision = getPrecisionData(); }catch(e){}
+6959:       const state = collectState();
+6960:       wrap.innerHTML = `
+6961:         <div class="line"><span>Campos salvos</span><strong>${Object.keys(state.inputs).length + Object.keys(state.checks).length}</strong></div>
+6962:         <div class="line"><span>Atividades personalizadas</span><strong>${customActivities.length}</strong></div>
+6963:         <div class="line"><span>Última versão</span><strong>v10 operacional</strong></div>
+6964:         <div class="line final"><span>Pagantes estimados</span><strong>${precision ? precision.totalPayers : '-'}</strong></div>
+6965:       `;
+6966:     }
+6967: 
+6968:     function updateDashboard(){
+6969:       const dashMonthly = document.getElementById('dashMonthly');
+6970:       if(!dashMonthly) return;
+6971: 
+6972:       let calc, form;
+6973:       try{
+6974:         calc = getCommercialCalc();
+6975:         form = getFormationCalc();
+6976:       }catch(e){
+6977:         console.warn('Dashboard aguardando campos da calculadora:', e);
+6978:         return;
+6979:       }
+6980: 
+6981:       dashMonthly.textContent = money.format(calc.mensalidade);
+6982:       document.getElementById('dashSubtitle').textContent = `${calc.turma.nome} · ${selectedHour}h`;
+6983:       document.getElementById('dashFull').textContent = money.format(calc.mensalidadeCheia);
+6984:       document.getElementById('dashDiscount').textContent = money.format(calc.desconto);
+6985:       document.getElementById('dashInitial').textContent = money.format(calc.totalInicial);
+-- 7018-7051 --
+7018:       }else{
+7019:         status.classList.add('ok');
+7020:         statusText = 'Excelente';
+7021:         adviceTitle = 'Proposta ideal';
+7022:         adviceText = 'A mensalidade está na faixa ideal ou acima dela, permitindo maior margem, reserva e reinvestimento na escola.';
+7023:       }
+7024: 
+7025:       status.querySelector('span').textContent = statusText;
+7026:       document.getElementById('dashAdvice').innerHTML = `<strong>${adviceTitle}</strong>${adviceText}`;
+7027: 
+7028:       const base = Math.max(0, calc.base);
+7029:       const food = Math.max(0, calc.alimentacaoCalculada);
+7030:       const activities = Math.max(0, calc.atividadesMensal);
+7031:       const other = Math.max(0, calc.extraTotal - food);
+7032:       const total = Math.max(1, base + food + activities + other);
+7033: 
+7034:       const pBase = (base / total) * 100;
+7035:       const pFood = (food / total) * 100;
+7036:       const pActivities = (activities / total) * 100;
+7037:       const pOther = Math.max(0, 100 - pBase - pFood - pActivities);
+7038: 
+7039:       document.getElementById('dashDonut').style.background =
+7040:         `conic-gradient(#0757a8 0 ${pBase}%, #58c3de ${pBase}% ${pBase+pFood}%, #ffc20a ${pBase+pFood}% ${pBase+pFood+pActivities}%, #9fb0bd ${pBase+pFood+pActivities}% 100%)`;
+7041: 
+7042:       document.getElementById('dashLegend').innerHTML = `
+7043:         <div class="dash-legend-item"><i class="dash-dot" style="background:#0757a8"></i><span>Base</span><b>${money.format(base)}</b></div>
+7044:         <div class="dash-legend-item"><i class="dash-dot" style="background:#58c3de"></i><span>Alimentação</span><b>${money.format(food)}</b></div>
+7045:         <div class="dash-legend-item"><i class="dash-dot" style="background:#ffc20a"></i><span>Atividades</span><b>${money.format(activities)}</b></div>
+7046:         <div class="dash-legend-item"><i class="dash-dot" style="background:#9fb0bd"></i><span>Outros extras</span><b>${money.format(other)}</b></div>
+7047:       `;
+7048:     }
+7049: 
+7050:     function updateAll(){
+7051:       updateCommercial();
+-- 7034-7067 --
+7034:       const pBase = (base / total) * 100;
+7035:       const pFood = (food / total) * 100;
+7036:       const pActivities = (activities / total) * 100;
+7037:       const pOther = Math.max(0, 100 - pBase - pFood - pActivities);
+7038: 
+7039:       document.getElementById('dashDonut').style.background =
+7040:         `conic-gradient(#0757a8 0 ${pBase}%, #58c3de ${pBase}% ${pBase+pFood}%, #ffc20a ${pBase+pFood}% ${pBase+pFood+pActivities}%, #9fb0bd ${pBase+pFood+pActivities}% 100%)`;
+7041: 
+7042:       document.getElementById('dashLegend').innerHTML = `
+7043:         <div class="dash-legend-item"><i class="dash-dot" style="background:#0757a8"></i><span>Base</span><b>${money.format(base)}</b></div>
+7044:         <div class="dash-legend-item"><i class="dash-dot" style="background:#58c3de"></i><span>Alimentação</span><b>${money.format(food)}</b></div>
+7045:         <div class="dash-legend-item"><i class="dash-dot" style="background:#ffc20a"></i><span>Atividades</span><b>${money.format(activities)}</b></div>
+7046:         <div class="dash-legend-item"><i class="dash-dot" style="background:#9fb0bd"></i><span>Outros extras</span><b>${money.format(other)}</b></div>
+7047:       `;
+7048:     }
+7049: 
+7050:     function updateAll(){
+7051:       updateCommercial();
+7052:       updateFormation();
+7053:       updateReports();
+7054:       updateSidebarQuickView();
+7055:       updateDashboard();
+7056:       updateComparison();
+7057:       updatePrecision();
+7058:       updateSmartAlerts();
+7059:       updatePresentation();
+7060:       updateSettingsSummary();
+7061:       scheduleSave();
+7062:     }
+7063: 
+7064:     document.querySelectorAll('input, select').forEach(input => {
+7065:       input.addEventListener('input', updateAll);
+7066:       input.addEventListener('change', updateAll);
+7067:     });
+-- 7269-7302 --
+7269:       lines.push('ℹ️ Service Worker requer hospedagem com sw.js');
+7270: 
+7271:       lines.push('ℹ️ Manifest requer hospedagem externa');
+7272: 
+7273:       const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+7274:       lines.push(standalone ? '✅ Rodando como app' : 'ℹ️ Ainda rodando no navegador');
+7275: 
+7276:       if(diagnostic){
+7277:         diagnostic.innerHTML = lines.map(line => `<span>${line}</span>`).join('');
+7278:       }
+7279:     }
+7280: 
+7281:     window.addEventListener('load', () => {
+7282:       registerPWA();
+7283:     });
+7284: 
+7285:     const checkPwaBtn = document.getElementById('checkPwaBtn');
+7286:     if(checkPwaBtn){
+7287:       checkPwaBtn.addEventListener('click', registerPWA);
+7288:     }
+7289: 
+7290: 
+7291:     // Menu mobile colapsável
+7292:     function setupMobileMenu(){
+7293:       const sidebar = document.querySelector('.sidebar');
+7294:       const toggle = document.getElementById('mobileMenuToggle');
+7295:       if(!sidebar || !toggle) return;
+7296: 
+7297:       toggle.addEventListener('click', () => {
+7298:         const open = sidebar.classList.toggle('mobile-open');
+7299:         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+7300:         toggle.innerHTML = open ? '<span>×</span><b>Fechar</b>' : '<span>☰</span><b>Menu</b>';
+7301:       });
+7302: 
+-- 7292-7325 --
+7292:     function setupMobileMenu(){
+7293:       const sidebar = document.querySelector('.sidebar');
+7294:       const toggle = document.getElementById('mobileMenuToggle');
+7295:       if(!sidebar || !toggle) return;
+7296: 
+7297:       toggle.addEventListener('click', () => {
+7298:         const open = sidebar.classList.toggle('mobile-open');
+7299:         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+7300:         toggle.innerHTML = open ? '<span>×</span><b>Fechar</b>' : '<span>☰</span><b>Menu</b>';
+7301:       });
+7302: 
+7303:       document.querySelectorAll('.side-link').forEach(link => {
+7304:         link.addEventListener('click', () => {
+7305:           if(window.matchMedia('(max-width:1020px)').matches){
+7306:             sidebar.classList.remove('mobile-open');
+7307:             toggle.setAttribute('aria-expanded', 'false');
+7308:             toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+7309:             setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 80);
+7310:           }
+7311:         });
+7312:       });
+7313: 
+7314:       window.addEventListener('resize', () => {
+7315:         if(!window.matchMedia('(max-width:1020px)').matches){
+7316:           sidebar.classList.remove('mobile-open');
+7317:           toggle.setAttribute('aria-expanded', 'false');
+7318:           toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+7319:         }
+7320:       });
+7321:     }
+7322: 
+7323:     setupMobileMenu();
+7324: 
+7325:     // ===== NOVAS FUNCIONALIDADES =====
+-- 7300-7333 --
+7300:         toggle.innerHTML = open ? '<span>×</span><b>Fechar</b>' : '<span>☰</span><b>Menu</b>';
+7301:       });
+7302: 
+7303:       document.querySelectorAll('.side-link').forEach(link => {
+7304:         link.addEventListener('click', () => {
+7305:           if(window.matchMedia('(max-width:1020px)').matches){
+7306:             sidebar.classList.remove('mobile-open');
+7307:             toggle.setAttribute('aria-expanded', 'false');
+7308:             toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+7309:             setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 80);
+7310:           }
+7311:         });
+7312:       });
+7313: 
+7314:       window.addEventListener('resize', () => {
+7315:         if(!window.matchMedia('(max-width:1020px)').matches){
+7316:           sidebar.classList.remove('mobile-open');
+7317:           toggle.setAttribute('aria-expanded', 'false');
+7318:           toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+7319:         }
+7320:       });
+7321:     }
+7322: 
+7323:     setupMobileMenu();
+7324: 
+7325:     // ===== NOVAS FUNCIONALIDADES =====
+7326: 
+7327:     // Projeção Anual
+7328:     function updateAnnualProjection(){
+7329:       let precision = null;
+7330:       try{ precision = getPrecisionData(); }catch(e){}
+7331:       const monthly = precision ? precision.revenueCurrent : 0;
+7332:       const el1 = document.getElementById('projConservador');
+7333:       const el2 = document.getElementById('projRealista');
+-- 7310-7343 --
+7310:           }
+7311:         });
+7312:       });
+7313: 
+7314:       window.addEventListener('resize', () => {
+7315:         if(!window.matchMedia('(max-width:1020px)').matches){
+7316:           sidebar.classList.remove('mobile-open');
+7317:           toggle.setAttribute('aria-expanded', 'false');
+7318:           toggle.innerHTML = '<span>☰</span><b>Menu</b>';
+7319:         }
+7320:       });
+7321:     }
+7322: 
+7323:     setupMobileMenu();
+7324: 
+7325:     // ===== NOVAS FUNCIONALIDADES =====
+7326: 
+7327:     // Projeção Anual
+7328:     function updateAnnualProjection(){
+7329:       let precision = null;
+7330:       try{ precision = getPrecisionData(); }catch(e){}
+7331:       const monthly = precision ? precision.revenueCurrent : 0;
+7332:       const el1 = document.getElementById('projConservador');
+7333:       const el2 = document.getElementById('projRealista');
+7334:       const el3 = document.getElementById('projOtimista');
+7335:       const money2 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7336:       if(el1) el1.textContent = money2.format(monthly * 0.90 * 12);
+7337:       if(el2) el2.textContent = money2.format(monthly * 12);
+7338:       if(el3) el3.textContent = money2.format(monthly * 1.10 * 12);
+7339:     }
+7340: 
+7341:     // IPCA banner
+7342:     function getIPCARate(){
+7343:       const el = document.getElementById('ipcaRate');
+-- 7368-7401 --
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+7385:         </tr>
+7386:       `).join('');
+7387:     }
+7388: 
+7389:     function doAddSnapshot(desc){
+7390:       let rows = [];
+7391:       try{ rows = getComparisonData(); }catch(e){ showToast('Configure os preços primeiro!'); return; }
+7392:       const ipca = getIPCARate();
+7393:       const dateStr = new Date().toLocaleDateString('pt-BR');
+7394:       const history = loadHistory();
+7395:       rows.forEach(r => {
+7396:         history.push({
+7397:           date: dateStr, turma: r.turma, hour: r.hour,
+7398:           currentPrice: r.current, recommendedPrice: r.recommended,
+7399:           diff: r.diff, diffPct: r.diffPercent.toFixed(1),
+7400:           ipca: (ipca*100).toFixed(1)+'%', description: desc||''
+7401:         });
+
+## localStorage.setItem
+-- 6733-6766 --
+6733: 
+6734:       isRestoringState = false;
+6735:       updateAll();
+6736:     }
+6737: 
+6738:     function saveState(){
+6739:       if(isRestoringState) return;
+6740:       try{
+6741:         localStorage.setItem('novaSabaraCalculadoraState', JSON.stringify(collectState()));
+6742:         const status = document.getElementById('saveStatus');
+6743:         if(status) status.textContent = `Salvo automaticamente às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}`;
+6744:       }catch(e){
+6745:         console.warn('Não foi possível salvar:', e);
+6746:       }
+6747:     }
+6748: 
+6749:     function scheduleSave(){
+6750:       clearTimeout(saveTimer);
+6751:       saveTimer = setTimeout(saveState, 250);
+6752:     }
+6753: 
+6754:     function loadState(){
+6755:       try{
+6756:         const raw = localStorage.getItem('novaSabaraCalculadoraState');
+6757:         if(raw) applyState(JSON.parse(raw));
+6758:       }catch(e){
+6759:         console.warn('Não foi possível carregar dados salvos:', e);
+6760:       }
+6761:     }
+6762: 
+6763:     function exportBackup(){
+6764:       const state = collectState();
+6765:       try{
+6766:         const historyRaw = localStorage.getItem('novaSabaraHistorico_v2');
+-- 6782-6815 --
+6782:     function importBackup(file){
+6783:       if(!file) return;
+6784:       const reader = new FileReader();
+6785:       reader.onload = () => {
+6786:         try{
+6787:           const state = JSON.parse(reader.result);
+6788:           if(!isValidSavedState(state)) throw new Error('Estrutura de backup inválida');
+6789:           applyState(state);
+6790:           if(Array.isArray(state.history)) localStorage.setItem('novaSabaraHistorico_v2', JSON.stringify(state.history));
+6791:           saveState();
+6792:           if(typeof renderHistory==='function') renderHistory();
+6793:           showToast('Backup importado!');
+6794:         }catch(e){
+6795:           alert('Não foi possível importar este backup. Verifique se o arquivo é JSON válido.');
+6796:         }
+6797:       };
+6798:       reader.readAsText(file);
+6799:     }
+6800: 
+6801:     function clearSavedData(){
+6802:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6803:         localStorage.removeItem('novaSabaraCalculadoraState');
+6804:         localStorage.removeItem('novaSabaraHistorico_v2');
+6805:         showToast('Dados locais limpos!');
+6806:         setTimeout(()=>location.reload(), 250);
+6807:       }
+6808:     }
+6809: 
+6810:     function buildSmartAlerts(){
+6811:       const alerts = [];
+6812:       const calc = getCommercialCalc();
+6813:       const form = getFormationCalc();
+6814:       let precision = null;
+6815:       try{ precision = getPrecisionData(); }catch(e){}
+-- 7352-7385 --
+7352:     }
+7353:     const ipcaEl2 = document.getElementById('ipcaRate');
+7354:     if(ipcaEl2){ ipcaEl2.addEventListener('input', updateIPCABanner); }
+7355:     updateIPCABanner();
+7356: 
+7357:     // Histórico de Reajustes
+7358:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7359:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7360:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7361: 
+7362:     function renderHistory(){
+7363:       const tbody = document.getElementById('historyTableBody');
+7364:       const wrap = document.getElementById('historyTableWrap');
+7365:       const empty = document.getElementById('historyEmpty');
+7366:       if(!tbody) return;
+7367:       const history = loadHistory();
+7368:       if(history.length === 0){
+7369:         if(wrap) wrap.style.display = 'none';
+7370:         if(empty) empty.style.display = '';
+7371:         return;
+7372:       }
+7373:       if(wrap) wrap.style.display = '';
+7374:       if(empty) empty.style.display = 'none';
+7375:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7376:       tbody.innerHTML = [...history].reverse().map(e => `
+7377:         <tr>
+7378:           <td>${e.date}</td>
+7379:           <td>${e.turma} · ${e.hour}h</td>
+7380:           <td>${money3.format(e.currentPrice)}</td>
+7381:           <td>${money3.format(e.recommendedPrice)}</td>
+7382:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+7383:           <td>${e.ipca||'—'}</td>
+7384:           <td style="color:#667789;font-size:11px">${e.description||'—'}</td>
+7385:         </tr>
+
+## localStorage.removeItem
+-- 6795-6828 --
+6795:           alert('Não foi possível importar este backup. Verifique se o arquivo é JSON válido.');
+6796:         }
+6797:       };
+6798:       reader.readAsText(file);
+6799:     }
+6800: 
+6801:     function clearSavedData(){
+6802:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6803:         localStorage.removeItem('novaSabaraCalculadoraState');
+6804:         localStorage.removeItem('novaSabaraHistorico_v2');
+6805:         showToast('Dados locais limpos!');
+6806:         setTimeout(()=>location.reload(), 250);
+6807:       }
+6808:     }
+6809: 
+6810:     function buildSmartAlerts(){
+6811:       const alerts = [];
+6812:       const calc = getCommercialCalc();
+6813:       const form = getFormationCalc();
+6814:       let precision = null;
+6815:       try{ precision = getPrecisionData(); }catch(e){}
+6816: 
+6817:       if(calc.mensalidade < form.minima){
+6818:         alerts.push({type:'danger', title:'Mensalidade abaixo do mínimo', text:'A simulação atual está abaixo do custo mínimo. Evite aprovar esta proposta sem ajuste.'});
+6819:       }else if(calc.mensalidade < form.segura){
+6820:         alerts.push({type:'warn', title:'Mensalidade abaixo da segura', text:'A proposta cobre o mínimo, mas não protege suficientemente contra inadimplência e reserva.'});
+6821:       }else{
+6822:         alerts.push({type:'ok', title:'Mensalidade comercial saudável', text:'A simulação atual está acima da referência segura.'});
+6823:       }
+6824: 
+6825:       if(calc.desconto > 0){
+6826:         const pct = calc.mensalidadeCheia > 0 ? (calc.desconto / calc.mensalidadeCheia) * 100 : 0;
+6827:         alerts.push({type:pct > 12 ? 'warn' : 'ok', title:'Desconto aplicado', text:`O desconto representa ${pct.toFixed(1)}% da mensalidade cheia.`});
+6828:       }
+-- 6796-6829 --
+6796:         }
+6797:       };
+6798:       reader.readAsText(file);
+6799:     }
+6800: 
+6801:     function clearSavedData(){
+6802:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6803:         localStorage.removeItem('novaSabaraCalculadoraState');
+6804:         localStorage.removeItem('novaSabaraHistorico_v2');
+6805:         showToast('Dados locais limpos!');
+6806:         setTimeout(()=>location.reload(), 250);
+6807:       }
+6808:     }
+6809: 
+6810:     function buildSmartAlerts(){
+6811:       const alerts = [];
+6812:       const calc = getCommercialCalc();
+6813:       const form = getFormationCalc();
+6814:       let precision = null;
+6815:       try{ precision = getPrecisionData(); }catch(e){}
+6816: 
+6817:       if(calc.mensalidade < form.minima){
+6818:         alerts.push({type:'danger', title:'Mensalidade abaixo do mínimo', text:'A simulação atual está abaixo do custo mínimo. Evite aprovar esta proposta sem ajuste.'});
+6819:       }else if(calc.mensalidade < form.segura){
+6820:         alerts.push({type:'warn', title:'Mensalidade abaixo da segura', text:'A proposta cobre o mínimo, mas não protege suficientemente contra inadimplência e reserva.'});
+6821:       }else{
+6822:         alerts.push({type:'ok', title:'Mensalidade comercial saudável', text:'A simulação atual está acima da referência segura.'});
+6823:       }
+6824: 
+6825:       if(calc.desconto > 0){
+6826:         const pct = calc.mensalidadeCheia > 0 ? (calc.desconto / calc.mensalidadeCheia) * 100 : 0;
+6827:         alerts.push({type:pct > 12 ? 'warn' : 'ok', title:'Desconto aplicado', text:`O desconto representa ${pct.toFixed(1)}% da mensalidade cheia.`});
+6828:       }
+6829: 
+
+## function reset
+-- 5604-5637 --
+5604: Mensalidade ideal: ${money.format(c.ideal)}
+5605: 
+5606: Receita ideal líquida estimada: ${money.format(c.receitaIdealLiquida)}
+5607: Resultado ideal estimado: ${money.format(c.lucroIdeal)}`;
+5608: 
+5609:       navigator.clipboard.writeText(text).then(() => showToast('Resumo copiado!'));
+5610:     }
+5611: 
+5612:     function resetCommercial(){
+5613:       selectedTurma = 'bercario';
+5614:       selectedHour = 6;
+5615:       document.getElementById('alimentacao').checked = true;
+5616:       document.getElementById('material').checked = false;
+5617:       document.getElementById('transporte').checked = false;
+5618:       document.getElementById('estendido').checked = false;
+5619:       document.getElementById('matricula').value = 0;
+5620:       document.getElementById('desconto').value = 0;
+5621:       document.getElementById('materialInicial').value = 180;
+5622:       document.getElementById('uniformeInicial').value = 0;
+5623:       document.getElementById('agendaApp').value = 50;
+5624:       document.getElementById('eventosProjetos').value = 0;
+5625:       customActivities = [];
+5626:       renderCustomActivities();
+5627:       document.getElementById('diasLetivos').value = 22;
+5628:       document.getElementById('alimPerdas').value = 8;
+5629:       document.getElementById('alim_bercario').value = 11;
+5630:       document.getElementById('alim_maternal1').value = 10;
+5631:       document.getElementById('alim_maternal2').value = 10.5;
+5632:       document.getElementById('alim_jardim1').value = 12;
+5633:       document.getElementById('alim_jardim2').value = 12.5;
+5634: 
+5635:       ['natacao','judo','bale','teatro'].forEach(id => {
+5636:         document.getElementById(`act_${id}`).checked = false;
+5637:       });
+-- 5642-5675 --
+5642:       document.getElementById('act_judo_matricula').value = 40;
+5643:       document.getElementById('act_bale_mensal').value = 160;
+5644:       document.getElementById('act_bale_matricula').value = 45;
+5645:       document.getElementById('act_teatro_mensal').value = 140;
+5646:       document.getElementById('act_teatro_matricula').value = 35;
+5647:       updateAll();
+5648:     }
+5649: 
+5650:     function resetFormation(){
+5651:       const defaults = {
+5652:         folha:28000, impostos:6500, aluguel:7000, utilidades:3200, manutencao:2500, administrativo:2200, marketing:1200, outros:1800
+5653:       };
+5654:       Object.entries(defaults).forEach(([k,v]) => document.querySelector(`[data-cost="${k}"]`).value = v);
+5655: 
+5656:       const vars = { alimentacao:180, material:90, higiene:55, atividades:45 };
+5657:       Object.entries(vars).forEach(([k,v]) => document.querySelector(`[data-var="${k}"]`).value = v);
+5658: 
+5659:       document.getElementById('alunos').value = 60;
+5660:       document.getElementById('pagantes').value = 57;
+5661:       document.getElementById('inadimplencia').value = 5;
+5662:       document.getElementById('reserva').value = 5;
+5663:       document.getElementById('margem').value = 20;
+5664:       document.getElementById('arredondar').value = 50;
+5665: 
+5666:       Object.entries(commercialTable).forEach(([key, t]) => {
+5667:         const el = document.querySelector(`[data-weight="${key}"]`);
+5668:         if(el) el.value = t.peso;
+5669:       });
+5670: 
+5671:       updateAll();
+5672:     }
+5673: 
+5674: 
+5675: 
+-- 6203-6236 --
+6203: Maior atenção: ${biggestGap ? `${biggestGap.turma} ${biggestGap.hour}h | Atual ${money.format(biggestGap.current)} | Recomendado ${money.format(biggestGap.recommended)} | Diferença ${money.format(biggestGap.diff)}` : '-'}
+6204: 
+6205: Leitura:
+6206: ${belowRows.length === 0 ? 'A tabela atual está saudável em relação à mensalidade segura.' : belowRows.length <= 5 ? 'Há ajustes pontuais recomendados por turma/horário.' : 'Há defasagem relevante. Recomenda-se revisar a tabela com transição gradual.'}`;
+6207: 
+6208:       navigator.clipboard.writeText(text).then(() => showToast('Comparativo copiado!'));
+6209:     }
+6210: 
+6211:     function resetCurrentPrices(){
+6212:       Object.entries(currentPriceDefaults).forEach(([key, values]) => {
+6213:         [6,8,10,12].forEach(hour => {
+6214:           const el = document.querySelector(`[data-current-price="${key}_${hour}"]`);
+6215:           if(el) el.value = values[hour];
+6216:         });
+6217:       });
+6218:       updateAll();
+6219:     }
+6220: 
+6221: 
+6222:     const precisionDefaults = {
+6223:       bercario:{capacity:12,enrolled:8,payers:7,discount:8,teacher:1,assistant:2,teacherSalary:3200,assistantSalary:1900,charges:45},
+6224:       maternal1:{capacity:16,enrolled:13,payers:12,discount:7,teacher:1,assistant:1,teacherSalary:3100,assistantSalary:1850,charges:45},
+6225:       maternal2:{capacity:18,enrolled:15,payers:14,discount:6,teacher:1,assistant:1,teacherSalary:3000,assistantSalary:1800,charges:45},
+6226:       jardim1:{capacity:20,enrolled:17,payers:16,discount:5,teacher:1,assistant:1,teacherSalary:3000,assistantSalary:1750,charges:45},
+6227:       jardim2:{capacity:20,enrolled:18,payers:17,discount:5,teacher:1,assistant:0,teacherSalary:3000,assistantSalary:1750,charges:45}
+6228:     };
+6229: 
+6230:     function renderPrecisionInputs(){
+6231:       const classWrap = document.getElementById('classPrecisionInputs');
+6232:       const staffWrap = document.getElementById('staffPrecisionInputs');
+6233:       if(!classWrap || !staffWrap) return;
+6234: 
+6235:       classWrap.innerHTML = Object.entries(commercialTable).map(([key, turma]) => {
+6236:         const d = precisionDefaults[key];
+-- 6583-6616 --
+6583: Vagas disponíveis: ${goalData.openSeats}
+6584: 
+6585: Leitura:
+6586: ${d.monthlyResult < 0 ? 'Operação estimada no vermelho. Priorizar reajuste, ocupação e revisão de descontos.' : d.occupancy < .75 ? 'Ocupação abaixo do ideal. Trabalhar captação e rematrícula.' : 'Operação em faixa mais saudável. Corrigir defasagens pontuais.'}`;
+6587: 
+6588:       navigator.clipboard.writeText(text).then(() => showToast('Diagnóstico gerencial copiado!'));
+6589:     }
+6590: 
+6591:     function resetPrecision(){
+6592:       Object.entries(precisionDefaults).forEach(([key, d]) => {
+6593:         Object.entries(d).forEach(([field, value]) => {
+6594:           const el = document.querySelector(`[data-precision="${key}_${field}"]`);
+6595:           if(el) el.value = value;
+6596:         });
+6597:       });
+6598:       const adj = document.getElementById('adjustPercent');
+6599:       const mode = document.getElementById('adjustMode');
+6600:       const profit = document.getElementById('profitGoal');
+6601:       const ticketMode = document.getElementById('goalTicketMode');
+6602:       if(adj) adj.value = 8;
+6603:       if(mode) mode.value = 'all';
+6604:       if(profit) profit.value = 10000;
+6605:       if(ticketMode) ticketMode.value = 'current';
+6606:       updateAll();
+6607:     }
+6608: 
+6609: 
+6610:     let customActivities = [];
+6611:     let isRestoringState = false;
+6612:     let saveTimer = null;
+6613: 
+6614:     function getInitialCosts(){
+6615:       return n('materialInicial') + n('uniformeInicial') + n('agendaApp') + n('eventosProjetos');
+6616:     }
+
+## function updateAdjustmentTable
+-- 6507-6540 --
+6507:       document.getElementById('scenarioConservative').textContent = money.format(estimateScenario(data, -.10, .03));
+6508:       document.getElementById('scenarioRealistic').textContent = money.format(estimateScenario(data, 0, 0));
+6509:       document.getElementById('scenarioIdeal').textContent = money.format(estimateScenario(data, .10, -.02));
+6510: 
+6511:       updateEnrollmentOpportunity(data);
+6512:       updateAdjustmentTable(data);
+6513:     }
+6514: 
+6515:     function updateAdjustmentTable(data){
+6516:       const table = document.getElementById('adjustmentTable');
+6517:       if(!table) return;
+6518:       const percent = Number(document.getElementById('adjustPercent')?.value || 0) / 100;
+6519:       const mode = document.getElementById('adjustMode')?.value || 'all';
+6520: 
+6521:       const rows = [];
+6522:       Object.entries(commercialTable).forEach(([key, turma]) => {
+6523:         [6,8,10,12].forEach(hour => {
+6524:           const current = getCurrentPrice(key, hour);
+6525:           const recommended = getRecommendedPrice(key, hour);
+6526:           const shouldApply = mode === 'all' || current < recommended;
+6527:           const adjusted = shouldApply ? current * (1 + percent) : current;
+6528:           const impactMonthly = adjusted - current;
+6529:           rows.push({turma:turma.nome, hour, current, recommended, adjusted, impactMonthly});
+6530:         });
+6531:       });
+6532: 
+6533:       const totalMonthlyImpact = rows.reduce((a,r) => a + r.impactMonthly, 0);
+6534:       const body = rows.map(r => `
+6535:         <tr>
+6536:           <td>${r.turma} ${r.hour}h</td>
+6537:           <td>${money.format(r.current)}</td>
+6538:           <td>${money.format(r.recommended)}</td>
+6539:           <td>${money.format(r.adjusted)}</td>
+6540:           <td>${money.format(r.impactMonthly)}</td>
+
+## function getPrecisionData
+-- 6302-6335 --
+6302:       });
+6303:     }
+6304: 
+6305:     function pval(key, field){
+6306:       const el = document.querySelector(`[data-precision="${key}_${field}"]`);
+6307:       return Number(el?.value || 0);
+6308:     }
+6309: 
+6310:     function getPrecisionData(){
+6311:       const classes = Object.entries(commercialTable).map(([key, turma]) => {
+6312:         const capacity = pval(key,'capacity');
+6313:         const enrolled = pval(key,'enrolled');
+6314:         const payers = pval(key,'payers');
+6315:         const discount = pval(key,'discount') / 100;
+6316:         const teacher = pval(key,'teacher');
+6317:         const assistant = pval(key,'assistant');
+6318:         const teacherSalary = pval(key,'teacherSalary');
+6319:         const assistantSalary = pval(key,'assistantSalary');
+6320:         const charges = pval(key,'charges') / 100;
+6321:         const staffCost = ((teacher * teacherSalary) + (assistant * assistantSalary)) * (1 + charges);
+6322:         const avgCurrent = [6,8,10,12].reduce((acc,h) => acc + getCurrentPrice(key,h), 0) / 4;
+6323:         const avgRecommended = [6,8,10,12].reduce((acc,h) => acc + getRecommendedPrice(key,h), 0) / 4;
+6324:         const ticketCurrent = avgCurrent * (1 - discount);
+6325:         const ticketRecommended = avgRecommended;
+6326:         const revenueCurrent = ticketCurrent * payers;
+6327:         const revenueRecommended = ticketRecommended * payers;
+6328:         const occupancy = capacity > 0 ? enrolled / capacity : 0;
+6329:         return {
+6330:           key, turma:turma.nome, capacity, enrolled, payers, discount,
+6331:           teacher, assistant, staffCost, avgCurrent, avgRecommended,
+6332:           ticketCurrent, ticketRecommended, revenueCurrent, revenueRecommended, occupancy
+6333:         };
+6334:       });
+6335: 
+
+## DUPLICATE FUNCTIONS
+
+## DUPLICATE IDS
