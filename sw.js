@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'nova-sabara-';
-const CACHE_NAME = 'nova-sabara-pwa-v1.1-audit-safety';
+const CACHE_NAME = 'nova-sabara-pwa-v1.0.2-formula-integrity';
 const APP_SHELL = [
   "./",
   "./index.html",

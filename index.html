@@ -5439,8 +5439,11 @@ document.querySelectorAll('.side-link').forEach(link => {
       const margem = Math.max(0, n('margem')) / 100;
       const arredondar = Number(document.getElementById('arredondar').value || 1);
 
+      // Custos variáveis existem para todos os alunos ativos, inclusive bolsistas.
+      // A mensalidade mínima precisa ratear o custo total da escola entre os pagantes.
+      const custoTotalEscola = fixed + (variable * alunos);
       const custoFixoAluno = fixed / pagantes;
-      const custoTotalAluno = custoFixoAluno + variable;
+      const custoTotalAluno = custoTotalEscola / pagantes;
       const minima = roundTo(custoTotalAluno, arredondar);
       const seguraBase = custoTotalAluno / Math.max(.01, (1 - inad));
       const segura = roundTo(seguraBase * (1 + reserva), arredondar);
@@ -5449,7 +5452,6 @@ document.querySelectorAll('.side-link').forEach(link => {
       const receitaMinima = minima * pagantes;
       const receitaSegura = segura * pagantes;
       const receitaIdeal = ideal * pagantes;
-      const custoTotalEscola = fixed + (variable * alunos);
       const lucroIdeal = receitaIdeal - custoTotalEscola;
 
       return {
@@ -5496,7 +5498,7 @@ document.querySelectorAll('.side-link').forEach(link => {
         <div class="line"><span>Custos fixos mensais</span><strong>${money.format(c.fixed)}</strong></div>
         <div class="line"><span>Custo variável por aluno</span><strong>${money.format(c.variable)}</strong></div>
         <div class="line"><span>Custo fixo por pagante</span><strong>${money.format(c.custoFixoAluno)}</strong></div>
-        <div class="line"><span>Custo total por aluno</span><strong>${money.format(c.custoTotalAluno)}</strong></div>
+        <div class="line"><span>Custo total rateado por pagante</span><strong>${money.format(c.custoTotalAluno)}</strong></div>
         <div class="line warn"><span>Inadimplência usada</span><strong>${(c.inad*100).toFixed(1)}%</strong></div>
         <div class="line positive"><span>Receita ideal estimada</span><strong>${money.format(c.receitaIdeal)}</strong></div>
         <div class="line final"><span>Resultado ideal estimado</span><strong>${money.format(c.lucroIdeal)}</strong></div>
