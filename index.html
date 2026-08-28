@@ -4538,7 +4538,7 @@
         <div class="kpi">
           <small>Mensalidade ideal</small>
           <strong id="kpiIdeal">R$ 0,00</strong>
-          <em>Com margem de lucro</em>
+          <em>Com acréscimo gerencial</em>
         </div>
       </div>
 
@@ -4637,7 +4637,7 @@
                   <input id="reserva" type="number" value="5" min="0" max="80" step=".5">
                 </div>
                 <div class="field">
-                  <label>Margem de lucro desejada (%)</label>
+                  <label>Acréscimo desejado sobre mensalidade segura (%)</label>
                   <input id="margem" type="number" value="20" min="0" max="200" step="1">
                 </div>
                 <div class="field">
@@ -5452,12 +5452,14 @@ document.querySelectorAll('.side-link').forEach(link => {
       const receitaMinima = minima * pagantes;
       const receitaSegura = segura * pagantes;
       const receitaIdeal = ideal * pagantes;
-      const lucroIdeal = receitaIdeal - custoTotalEscola;
+      // Resultado esperado considera a própria inadimplência informada no cenário.
+      const receitaIdealLiquida = receitaIdeal * (1 - inad);
+      const lucroIdeal = receitaIdealLiquida - custoTotalEscola;
 
       return {
         fixed, variable, alunos, pagantes, inad, reserva, margem, arredondar,
         custoFixoAluno, custoTotalAluno, minima, segura, ideal,
-        receitaMinima, receitaSegura, receitaIdeal, custoTotalEscola, lucroIdeal
+        receitaMinima, receitaSegura, receitaIdeal, receitaIdealLiquida, custoTotalEscola, lucroIdeal
       };
     }
 
@@ -5492,7 +5494,7 @@ document.querySelectorAll('.side-link').forEach(link => {
       document.getElementById('seguraMain').textContent = money.format(c.segura);
       document.getElementById('idealMain').textContent = money.format(c.ideal);
 
-      const margemReal = c.receitaIdeal > 0 ? (c.lucroIdeal / c.receitaIdeal) * 100 : 0;
+      const margemReal = c.receitaIdealLiquida > 0 ? (c.lucroIdeal / c.receitaIdealLiquida) * 100 : 0;
 
       document.getElementById('formacaoSummary').innerHTML = `
         <div class="line"><span>Custos fixos mensais</span><strong>${money.format(c.fixed)}</strong></div>
@@ -5500,7 +5502,7 @@ document.querySelectorAll('.side-link').forEach(link => {
         <div class="line"><span>Custo fixo por pagante</span><strong>${money.format(c.custoFixoAluno)}</strong></div>
         <div class="line"><span>Custo total rateado por pagante</span><strong>${money.format(c.custoTotalAluno)}</strong></div>
         <div class="line warn"><span>Inadimplência usada</span><strong>${(c.inad*100).toFixed(1)}%</strong></div>
-        <div class="line positive"><span>Receita ideal estimada</span><strong>${money.format(c.receitaIdeal)}</strong></div>
+        <div class="line positive"><span>Receita ideal líquida estimada</span><strong>${money.format(c.receitaIdealLiquida)}</strong></div>
         <div class="line final"><span>Resultado ideal estimado</span><strong>${money.format(c.lucroIdeal)}</strong></div>
       `;
 
@@ -5601,7 +5603,7 @@ Mensalidade mínima: ${money.format(c.minima)}
 Mensalidade segura: ${money.format(c.segura)}
 Mensalidade ideal: ${money.format(c.ideal)}
 
-Receita ideal estimada: ${money.format(c.receitaIdeal)}
+Receita ideal líquida estimada: ${money.format(c.receitaIdealLiquida)}
 Resultado ideal estimado: ${money.format(c.lucroIdeal)}`;
 
       navigator.clipboard.writeText(text).then(() => showToast('Resumo copiado!'));
@@ -5759,11 +5761,11 @@ Resultado ideal estimado: ${money.format(c.lucroIdeal)}`;
                 <tr><td>Alunos pagantes estimados</td><td>${c.pagantes}</td></tr>
                 <tr><td>Inadimplência estimada</td><td>${(c.inad*100).toFixed(1)}%</td></tr>
                 <tr><td>Reserva de segurança</td><td>${(c.reserva*100).toFixed(1)}%</td></tr>
-                <tr><td>Margem desejada</td><td>${(c.margem*100).toFixed(1)}%</td></tr>
-                <tr><td>Receita ideal estimada</td><td>${money.format(c.receitaIdeal)}</td></tr>
+                <tr><td>Acréscimo desejado</td><td>${(c.margem*100).toFixed(1)}%</td></tr>
+                <tr><td>Receita ideal líquida estimada</td><td>${money.format(c.receitaIdealLiquida)}</td></tr>
               </tbody>
             </table>
-            <div class="print-note">A mensalidade mínima cobre custos. A segura protege contra inadimplência e reserva. A ideal considera margem para crescimento, melhorias e reinvestimento.</div>
+            <div class="print-note">A mensalidade mínima cobre custos. A segura protege contra inadimplência e reserva. A ideal considera acréscimo gerencial para crescimento, melhorias e reinvestimento.</div>
           </div>
         </article>
       `;
