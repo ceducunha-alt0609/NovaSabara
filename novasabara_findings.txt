@@ -1,0 +1,480 @@
+
+## function collectState
+6668:       updateAll();
+6669:     }
+6670: 
+6671:     function collectState(){
+6672:       const state = { version:'nova-sabara-v10', inputs:{}, checks:{}, customActivities };
+6673:       document.querySelectorAll('input, select').forEach(el => {
+6674:         if(!el.id && !el.dataset.currentPrice && !el.dataset.precision && !el.dataset.weight) return;
+6675:         const key = el.id || el.dataset.currentPrice || el.dataset.precision || `weight_${el.dataset.weight}`;
+6676:         if(el.type === 'file') return;
+6677:         if(el.type === 'checkbox') state.checks[key] = el.checked;
+6678:         else state.inputs[key] = el.value;
+6679:       });
+6680:       state.selectedTurma = selectedTurma;
+6681:       state.selectedHour = selectedHour;
+6682:       return state;
+6683:     }
+6684: 
+6685:     function applyState(state){
+6686:       if(!state) return;
+6687:       isRestoringState = true;
+6688: 
+6689:       if(Array.isArray(state.customActivities)){
+6690:         customActivities = state.customActivities;
+6691:         renderCustomActivities();
+6692:       }
+6693: 
+---
+
+## function applyState
+6682:       return state;
+6683:     }
+6684: 
+6685:     function applyState(state){
+6686:       if(!state) return;
+6687:       isRestoringState = true;
+6688: 
+6689:       if(Array.isArray(state.customActivities)){
+6690:         customActivities = state.customActivities;
+6691:         renderCustomActivities();
+6692:       }
+6693: 
+6694:       Object.entries(state.inputs || {}).forEach(([key, value]) => {
+6695:         let el = document.getElementById(key) || document.querySelector(`[data-current-price="${key}"]`) || document.querySelector(`[data-precision="${key}"]`);
+6696:         if(key.startsWith('weight_')){
+6697:           el = document.querySelector(`[data-weight="${key.replace('weight_','')}"]`);
+6698:         }
+6699:         if(el) el.value = value;
+6700:       });
+6701: 
+6702:       Object.entries(state.checks || {}).forEach(([key, value]) => {
+6703:         const el = document.getElementById(key) || document.querySelector(`[data-current-price="${key}"]`) || document.querySelector(`[data-precision="${key}"]`);
+6704:         if(el) el.checked = !!value;
+6705:       });
+6706: 
+6707:       if(state.selectedTurma && commercialTable[state.selectedTurma]) selectedTurma = state.selectedTurma;
+---
+
+## function exportBackup
+6736:       }
+6737:     }
+6738: 
+6739:     function exportBackup(){
+6740:       const blob = new Blob([JSON.stringify(collectState(), null, 2)], {type:'application/json'});
+6741:       const url = URL.createObjectURL(blob);
+6742:       const a = document.createElement('a');
+6743:       a.href = url;
+6744:       a.download = `backup-calculadora-nova-sabara-${new Date().toISOString().slice(0,10)}.json`;
+6745:       document.body.appendChild(a);
+6746:       a.click();
+6747:       a.remove();
+6748:       URL.revokeObjectURL(url);
+6749:       showToast('Backup exportado!');
+6750:     }
+6751: 
+6752:     function importBackup(file){
+6753:       if(!file) return;
+6754:       const reader = new FileReader();
+6755:       reader.onload = () => {
+6756:         try{
+6757:           const state = JSON.parse(reader.result);
+6758:           applyState(state);
+6759:           saveState();
+6760:           showToast('Backup importado!');
+6761:         }catch(e){
+---
+
+## function importBackup
+6749:       showToast('Backup exportado!');
+6750:     }
+6751: 
+6752:     function importBackup(file){
+6753:       if(!file) return;
+6754:       const reader = new FileReader();
+6755:       reader.onload = () => {
+6756:         try{
+6757:           const state = JSON.parse(reader.result);
+6758:           applyState(state);
+6759:           saveState();
+6760:           showToast('Backup importado!');
+6761:         }catch(e){
+6762:           alert('Não foi possível importar este backup. Verifique se o arquivo é JSON válido.');
+6763:         }
+6764:       };
+6765:       reader.readAsText(file);
+6766:     }
+6767: 
+6768:     function clearSavedData(){
+6769:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6770:         localStorage.removeItem('novaSabaraCalculadoraState');
+6771:         showToast('Dados locais limpos!');
+6772:       }
+6773:     }
+6774: 
+---
+
+## function clearSavedData
+6765:       reader.readAsText(file);
+6766:     }
+6767: 
+6768:     function clearSavedData(){
+6769:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6770:         localStorage.removeItem('novaSabaraCalculadoraState');
+6771:         showToast('Dados locais limpos!');
+6772:       }
+6773:     }
+6774: 
+6775:     function buildSmartAlerts(){
+6776:       const alerts = [];
+6777:       const calc = getCommercialCalc();
+6778:       const form = getFormationCalc();
+6779:       let precision = null;
+6780:       try{ precision = getPrecisionData(); }catch(e){}
+6781: 
+6782:       if(calc.mensalidade < form.minima){
+6783:         alerts.push({type:'danger', title:'Mensalidade abaixo do mínimo', text:'A simulação atual está abaixo do custo mínimo. Evite aprovar esta proposta sem ajuste.'});
+6784:       }else if(calc.mensalidade < form.segura){
+6785:         alerts.push({type:'warn', title:'Mensalidade abaixo da segura', text:'A proposta cobre o mínimo, mas não protege suficientemente contra inadimplência e reserva.'});
+6786:       }else{
+6787:         alerts.push({type:'ok', title:'Mensalidade comercial saudável', text:'A simulação atual está acima da referência segura.'});
+6788:       }
+6789: 
+6790:       if(calc.desconto > 0){
+---
+
+## HIST_KEY
+7320:     updateIPCABanner();
+7321: 
+7322:     // Histórico de Reajustes
+7323:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7324:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7325:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7326: 
+7327:     function renderHistory(){
+7328:       const tbody = document.getElementById('historyTableBody');
+7329:       const wrap = document.getElementById('historyTableWrap');
+7330:       const empty = document.getElementById('historyEmpty');
+7331:       if(!tbody) return;
+7332:       const history = loadHistory();
+7333:       if(history.length === 0){
+7334:         if(wrap) wrap.style.display = 'none';
+7335:         if(empty) empty.style.display = '';
+7336:         return;
+7337:       }
+7338:       if(wrap) wrap.style.display = '';
+7339:       if(empty) empty.style.display = 'none';
+7340:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7341:       tbody.innerHTML = [...history].reverse().map(e => `
+7342:         <tr>
+7343:           <td>${e.date}</td>
+7344:           <td>${e.turma} · ${e.hour}h</td>
+7345:           <td>${money3.format(e.currentPrice)}</td>
+---
+7321: 
+7322:     // Histórico de Reajustes
+7323:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7324:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7325:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7326: 
+7327:     function renderHistory(){
+7328:       const tbody = document.getElementById('historyTableBody');
+7329:       const wrap = document.getElementById('historyTableWrap');
+7330:       const empty = document.getElementById('historyEmpty');
+7331:       if(!tbody) return;
+7332:       const history = loadHistory();
+7333:       if(history.length === 0){
+7334:         if(wrap) wrap.style.display = 'none';
+7335:         if(empty) empty.style.display = '';
+7336:         return;
+7337:       }
+7338:       if(wrap) wrap.style.display = '';
+7339:       if(empty) empty.style.display = 'none';
+7340:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7341:       tbody.innerHTML = [...history].reverse().map(e => `
+7342:         <tr>
+7343:           <td>${e.date}</td>
+7344:           <td>${e.turma} · ${e.hour}h</td>
+7345:           <td>${money3.format(e.currentPrice)}</td>
+7346:           <td>${money3.format(e.recommendedPrice)}</td>
+---
+7322:     // Histórico de Reajustes
+7323:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7324:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7325:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7326: 
+7327:     function renderHistory(){
+7328:       const tbody = document.getElementById('historyTableBody');
+7329:       const wrap = document.getElementById('historyTableWrap');
+7330:       const empty = document.getElementById('historyEmpty');
+7331:       if(!tbody) return;
+7332:       const history = loadHistory();
+7333:       if(history.length === 0){
+7334:         if(wrap) wrap.style.display = 'none';
+7335:         if(empty) empty.style.display = '';
+7336:         return;
+7337:       }
+7338:       if(wrap) wrap.style.display = '';
+7339:       if(empty) empty.style.display = 'none';
+7340:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7341:       tbody.innerHTML = [...history].reverse().map(e => `
+7342:         <tr>
+7343:           <td>${e.date}</td>
+7344:           <td>${e.turma} · ${e.hour}h</td>
+7345:           <td>${money3.format(e.currentPrice)}</td>
+7346:           <td>${money3.format(e.recommendedPrice)}</td>
+7347:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+---
+
+## function loadHistory
+7321: 
+7322:     // Histórico de Reajustes
+7323:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7324:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7325:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7326: 
+7327:     function renderHistory(){
+7328:       const tbody = document.getElementById('historyTableBody');
+7329:       const wrap = document.getElementById('historyTableWrap');
+7330:       const empty = document.getElementById('historyEmpty');
+7331:       if(!tbody) return;
+7332:       const history = loadHistory();
+7333:       if(history.length === 0){
+7334:         if(wrap) wrap.style.display = 'none';
+7335:         if(empty) empty.style.display = '';
+7336:         return;
+7337:       }
+7338:       if(wrap) wrap.style.display = '';
+7339:       if(empty) empty.style.display = 'none';
+7340:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7341:       tbody.innerHTML = [...history].reverse().map(e => `
+7342:         <tr>
+7343:           <td>${e.date}</td>
+7344:           <td>${e.turma} · ${e.hour}h</td>
+7345:           <td>${money3.format(e.currentPrice)}</td>
+7346:           <td>${money3.format(e.recommendedPrice)}</td>
+---
+
+## function saveHistory
+7322:     // Histórico de Reajustes
+7323:     const HIST_KEY = 'novaSabaraHistorico_v2';
+7324:     function loadHistory(){ try{ const r=localStorage.getItem(HIST_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+7325:     function saveHistory(h){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(h)); }catch(e){} }
+7326: 
+7327:     function renderHistory(){
+7328:       const tbody = document.getElementById('historyTableBody');
+7329:       const wrap = document.getElementById('historyTableWrap');
+7330:       const empty = document.getElementById('historyEmpty');
+7331:       if(!tbody) return;
+7332:       const history = loadHistory();
+7333:       if(history.length === 0){
+7334:         if(wrap) wrap.style.display = 'none';
+7335:         if(empty) empty.style.display = '';
+7336:         return;
+7337:       }
+7338:       if(wrap) wrap.style.display = '';
+7339:       if(empty) empty.style.display = 'none';
+7340:       const money3 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+7341:       tbody.innerHTML = [...history].reverse().map(e => `
+7342:         <tr>
+7343:           <td>${e.date}</td>
+7344:           <td>${e.turma} · ${e.hour}h</td>
+7345:           <td>${money3.format(e.currentPrice)}</td>
+7346:           <td>${money3.format(e.recommendedPrice)}</td>
+7347:           <td style="color:${e.diff<0?'#df3b3b':'#18a058'}">${e.diff>=0?'+':''}${money3.format(e.diff)} (${e.diffPct}%)</td>
+---
+
+## function clearHistory
+
+## function saveHistoryEntry
+
+## serviceWorker.register
+7445:   // Registro do Service Worker: necessário para instalação como app/PWA
+7446:   if ('serviceWorker' in navigator) {
+7447:     window.addEventListener('load', function () {
+7448:       navigator.serviceWorker.register('./sw.js', { scope: './' })
+7449:         .then(function () { console.log('[NovaSabara] Service Worker registrado.'); })
+7450:         .catch(function (err) { console.warn('[NovaSabara] Falha no Service Worker:', err); });
+7451:     });
+7452:   }
+7453: </script>
+7454: 
+7455: </body>
+7456: </html>
+---
+
+## novaSabaraCalculadoraState
+6714:     function saveState(){
+6715:       if(isRestoringState) return;
+6716:       try{
+6717:         localStorage.setItem('novaSabaraCalculadoraState', JSON.stringify(collectState()));
+6718:         const status = document.getElementById('saveStatus');
+6719:         if(status) status.textContent = `Salvo automaticamente às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}`;
+6720:       }catch(e){
+6721:         console.warn('Não foi possível salvar:', e);
+6722:       }
+6723:     }
+6724: 
+6725:     function scheduleSave(){
+6726:       clearTimeout(saveTimer);
+6727:       saveTimer = setTimeout(saveState, 250);
+6728:     }
+6729: 
+6730:     function loadState(){
+6731:       try{
+6732:         const raw = localStorage.getItem('novaSabaraCalculadoraState');
+6733:         if(raw) applyState(JSON.parse(raw));
+6734:       }catch(e){
+6735:         console.warn('Não foi possível carregar dados salvos:', e);
+6736:       }
+6737:     }
+6738: 
+6739:     function exportBackup(){
+---
+6729: 
+6730:     function loadState(){
+6731:       try{
+6732:         const raw = localStorage.getItem('novaSabaraCalculadoraState');
+6733:         if(raw) applyState(JSON.parse(raw));
+6734:       }catch(e){
+6735:         console.warn('Não foi possível carregar dados salvos:', e);
+6736:       }
+6737:     }
+6738: 
+6739:     function exportBackup(){
+6740:       const blob = new Blob([JSON.stringify(collectState(), null, 2)], {type:'application/json'});
+6741:       const url = URL.createObjectURL(blob);
+6742:       const a = document.createElement('a');
+6743:       a.href = url;
+6744:       a.download = `backup-calculadora-nova-sabara-${new Date().toISOString().slice(0,10)}.json`;
+6745:       document.body.appendChild(a);
+6746:       a.click();
+6747:       a.remove();
+6748:       URL.revokeObjectURL(url);
+6749:       showToast('Backup exportado!');
+6750:     }
+6751: 
+6752:     function importBackup(file){
+6753:       if(!file) return;
+6754:       const reader = new FileReader();
+---
+6767: 
+6768:     function clearSavedData(){
+6769:       if(confirm('Deseja limpar os dados salvos neste navegador?')){
+6770:         localStorage.removeItem('novaSabaraCalculadoraState');
+6771:         showToast('Dados locais limpos!');
+6772:       }
+6773:     }
+6774: 
+6775:     function buildSmartAlerts(){
+6776:       const alerts = [];
+6777:       const calc = getCommercialCalc();
+6778:       const form = getFormationCalc();
+6779:       let precision = null;
+6780:       try{ precision = getPrecisionData(); }catch(e){}
+6781: 
+6782:       if(calc.mensalidade < form.minima){
+6783:         alerts.push({type:'danger', title:'Mensalidade abaixo do mínimo', text:'A simulação atual está abaixo do custo mínimo. Evite aprovar esta proposta sem ajuste.'});
+6784:       }else if(calc.mensalidade < form.segura){
+6785:         alerts.push({type:'warn', title:'Mensalidade abaixo da segura', text:'A proposta cobre o mínimo, mas não protege suficientemente contra inadimplência e reserva.'});
+6786:       }else{
+6787:         alerts.push({type:'ok', title:'Mensalidade comercial saudável', text:'A simulação atual está acima da referência segura.'});
+6788:       }
+6789: 
+6790:       if(calc.desconto > 0){
+6791:         const pct = calc.mensalidadeCheia > 0 ? (calc.desconto / calc.mensalidadeCheia) * 100 : 0;
+6792:         alerts.push({type:pct > 12 ? 'warn' : 'ok', title:'Desconto aplicado', text:`O desconto representa ${pct.toFixed(1)}% da mensalidade cheia.`});
+---
+
+## sw.js
+1: const CACHE_NAME = 'nova-sabara-pwa-v1.0.0';
+2: const APP_SHELL = [
+3:   "./",
+4:   "./index.html",
+5:   "./manifest.webmanifest",
+6:   "./manifest.json",
+7:   "./favicon.ico",
+8:   "./icon-32.png",
+9:   "./icon-192.png",
+10:   "./icon-512.png",
+11:   "./apple-touch-icon.png"
+12: ];
+13: 
+14: self.addEventListener('install', (event) => {
+15:   self.skipWaiting();
+16:   event.waitUntil(
+17:     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+18:   );
+19: });
+20: 
+21: self.addEventListener('activate', (event) => {
+22:   event.waitUntil(
+23:     caches.keys().then((keys) => Promise.all(keys.map((key) => {
+24:       if (key !== CACHE_NAME) return caches.delete(key);
+25:     }))).then(() => self.clients.claim())
+26:   );
+27: });
+28: 
+29: self.addEventListener('fetch', (event) => {
+30:   if (event.request.method !== 'GET') return;
+31:   event.respondWith(
+32:     caches.match(event.request).then((cached) => {
+33:       if (cached) return cached;
+34:       return fetch(event.request).then((response) => {
+35:         const copy = response.clone();
+36:         caches.open(CACHE_NAME).then((cache) => {
+37:           try { cache.put(event.request, copy); } catch(e) {}
+38:         });
+39:         return response;
+40:       }).catch(() => caches.match('./index.html'));
+41:     })
+42:   );
+43: });
+
+## service-worker.js
+1: const CACHE_NAME = 'nova-sabara-mensalidades-v2';
+2: const APP_SHELL = [
+3:   './',
+4:   './index.html',
+5:   './manifest.json',
+6:   './sw.js',
+7:   './icon-192.png',
+8:   './icon-512.png',
+9:   './apple-touch-icon.png',
+10:   './favicon.png'
+11: ];
+12: 
+13: self.addEventListener('install', event => {
+14:   event.waitUntil(
+15:     caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
+16:   );
+17:   self.skipWaiting();
+18: });
+19: 
+20: self.addEventListener('activate', event => {
+21:   event.waitUntil(
+22:     caches.keys().then(keys =>
+23:       Promise.all(keys.map(key => key !== CACHE_NAME ? caches.delete(key) : null))
+24:     )
+25:   );
+26:   self.clients.claim();
+27: });
+28: 
+29: self.addEventListener('fetch', event => {
+30:   if (event.request.method !== 'GET') return;
+31: 
+32:   event.respondWith(
+33:     caches.match(event.request).then(cached => {
+34:       if (cached) return cached;
+35: 
+36:       return fetch(event.request).then(response => {
+37:         const responseClone = response.clone();
+38:         caches.open(CACHE_NAME).then(cache => {
+39:           cache.put(event.request, responseClone);
+40:         });
+41:         return response;
+42:       }).catch(() => caches.match('./index.html'));
+43:     })
+44:   );
+45: });
