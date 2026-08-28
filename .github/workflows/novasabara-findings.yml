@@ -1,0 +1,20 @@
+name: NovaSabara findings
+on:
+  push:
+    paths:
+      - 'novasabara_findings.py'
+      - '.github/workflows/novasabara-findings.yml'
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python novasabara_findings.py
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add novasabara_findings.txt
+          git diff --cached --quiet || git commit -m 'Generate NovaSabara findings'
+          git push
