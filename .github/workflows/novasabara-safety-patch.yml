@@ -1,0 +1,33 @@
+name: NovaSabara safety patch
+on:
+  push:
+    paths:
+      - 'novasabara_safety_patch.py'
+      - '.github/workflows/novasabara-safety-patch.yml'
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python novasabara_safety_patch.py
+      - name: Verify
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          w=Path('sw.js').read_text()
+          assert 'isValidSavedState' in s
+          assert "novaSabaraHistorico_v2', JSON.stringify(state.history)" in s
+          assert "removeItem('novaSabaraHistorico_v2')" in s
+          assert "key.startsWith(CACHE_PREFIX)" in w
+          assert 'nova-sabara-pwa-v1.1-audit-safety' in w
+          PY
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html sw.js service-worker.js
+          git diff --cached --quiet || git commit -m 'Harden NovaSabara backup reset and PWA cache'
+          git push
